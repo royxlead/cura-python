@@ -14,6 +14,16 @@ Cura is a medical assistant application designed to process medical documents, e
 
 ---
 
+## UI
+
+Below are the screenshots of the user interface:
+
+![UI Screenshot 1](assets/chat1.png)
+
+![UI Screenshot 2](assets/chat2.png)
+
+---
+
 ## Project Structure
 
 ### Root Directory
@@ -145,15 +155,6 @@ pip install -r requirements.txt
 
 ---
 
-## UI
-
-Below are the screenshots of the user interface:
-
-![UI Screenshot 1](assets/chat1.png)
-
-![UI Screenshot 2](assets/chat2.png)
-
----
 
 ## License
 
