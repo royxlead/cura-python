@@ -145,6 +145,16 @@ pip install -r requirements.txt
 
 ---
 
+## UI
+
+Below are the screenshots of the user interface:
+
+![UI Screenshot 1](assets/chat1.png)
+
+![UI Screenshot 2](assets/chat2.png)
+
+---
+
 ## License
 
 This project is licensed under the terms of the [MIT License](LICENSE).
