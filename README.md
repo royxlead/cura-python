@@ -65,7 +65,7 @@ Below are the screenshots of the user interface:
 
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/heysouravroy/Cura.git
    cd Cura
    ```
 2. Set up a Python virtual environment:
