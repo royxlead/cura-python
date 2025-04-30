@@ -53,7 +53,7 @@ Below are the screenshots of the user interface:
 
 ![UI Screenshot 1](assets/chat1.png)
 
-![UI Screenshot 1](assets/chat2.png)
+![UI Screenshot 2](assets/chat2.png)
 
 ---
 
