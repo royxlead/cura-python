@@ -52,8 +52,8 @@ bower_components/
 *.lock
 *.cache
 
-# Faiss index
-faiss_index/
+# # Faiss index
+# faiss_index/
 
 # Chat logs
 chat_logs/
