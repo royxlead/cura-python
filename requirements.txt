@@ -10,6 +10,7 @@ uvicorn
 python-dotenv
 langchain
 langchain-together
+langchain-huggingface
 transformers
 sentence-transformers
 faiss-cpu
