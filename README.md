@@ -71,7 +71,7 @@ Ensure the following dependencies are installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/heysouravroy/CURA.git
+   git clone https://github.com/royxdev/CURA.git
    cd CURA
    ```
 
