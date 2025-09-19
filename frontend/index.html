@@ -4,44 +4,444 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cura - AI Medical Assistant</title>
-    <meta name="description" content="AI-powered medical assistant for healthcare information">
+    <meta name="description" content="Advanced AI-powered medical assistant for healthcare information">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1976d2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Cura AI">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <main class="container">
-        <div class="chat-container">
-            <header class="chat-header">
-                <div class="header-left">
-                    <h1><i class="fas fa-stethoscope"></i> Cura</h1>
-                    <span class="status">AI Assistant Online</span>
-                </div>
-                <div class="header-actions">
-                    <button id="clearButton" class="action-button" title="Clear chat history">
-                        <i class="fas fa-trash-alt"></i>
-                        <span>Clear Chat</span>
-                    </button>
-                </div>
-            </header>
-            
-            <section class="chat-messages" id="chatMessages">
-                <!-- Messages will be inserted here -->
-            </section>
-
-            <footer class="input-container">
-                <input type="text" 
-                       id="messageInput" 
-                       placeholder="Ask your medical question..." 
-                       aria-label="Your message"
-                       autocomplete="off">
-                <span id="charCounter" class="char-counter">0/500</span>
-                <button id="sendButton" aria-label="Send message">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </footer>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="pulse-ring">
+                <span class="material-symbols-rounded">health_and_safety</span>
+            </div>
+            <h2>Cura AI</h2>
+            <p>Initializing your medical assistant...</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
         </div>
-    </main>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle">
+                    <span class="material-symbols-rounded">menu</span>
+                </button>
+                <div class="logo">
+                    <span class="material-symbols-rounded">health_and_safety</span>
+                    <span class="logo-text">Cura</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="status-indicator">
+                    <div class="status-dot online"></div>
+                    <span>AI Assistant Online</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button id="themeToggle" class="icon-button" title="Toggle Theme">
+                    <span class="material-symbols-rounded">dark_mode</span>
+                </button>
+                <button id="notificationsBtn" class="icon-button" title="Notifications">
+                    <span class="material-symbols-rounded">notifications</span>
+                </button>
+                <div class="user-menu">
+                    <button id="userMenuBtn" class="user-avatar">
+                        <span class="material-symbols-rounded">account_circle</span>
+                    </button>
+                    <div id="userDropdown" class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <span class="material-symbols-rounded">person</span>
+                            Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="material-symbols-rounded">settings</span>
+                            Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="logoutBtn">
+                            <span class="material-symbols-rounded">logout</span>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3>Assistant</h3>
+                    <a href="#" class="nav-item active" data-view="chat">
+                        <span class="material-symbols-rounded">chat</span>
+                        <span>Chat</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="voice">
+                        <span class="material-symbols-rounded">mic</span>
+                        <span>Voice Assistant</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <h3>Health Tools</h3>
+                    <a href="#" class="nav-item" data-view="symptoms">
+                        <span class="material-symbols-rounded">medical_information</span>
+                        <span>Symptom Checker</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="medications">
+                        <span class="material-symbols-rounded">medication</span>
+                        <span>Medications</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="vitals">
+                        <span class="material-symbols-rounded">monitor_heart</span>
+                        <span>Vital Signs</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="imaging">
+                        <span class="material-symbols-rounded">medical_services</span>
+                        <span>Image Analysis</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <h3>History</h3>
+                    <a href="#" class="nav-item" data-view="sessions">
+                        <span class="material-symbols-rounded">history</span>
+                        <span>Chat History</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="reports">
+                        <span class="material-symbols-rounded">description</span>
+                        <span>Health Reports</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="upgrade-prompt">
+                    <span class="material-symbols-rounded">star</span>
+                    <div>
+                        <h4>Upgrade to Pro</h4>
+                        <p>Get advanced features</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat View -->
+            <div id="chatView" class="view active">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h1>Medical AI Assistant</h1>
+                        <p>Ask me anything about your health, symptoms, medications, or medical conditions.</p>
+                    </div>
+                    
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="welcome-message">
+                            <div class="welcome-icon">
+                                <span class="material-symbols-rounded">health_and_safety</span>
+                            </div>
+                            <h2>Hello! I'm Cura, your AI medical assistant</h2>
+                            <p>I can help you with health information, symptom analysis, medication guidance, and more. How can I assist you today?</p>
+                            
+                            <div class="quick-actions">
+                                <button class="quick-action" data-message="What are the symptoms of flu?">
+                                    <span class="material-symbols-rounded">sick</span>
+                                    Flu Symptoms
+                                </button>
+                                <button class="quick-action" data-message="Tell me about high blood pressure">
+                                    <span class="material-symbols-rounded">monitor_heart</span>
+                                    Blood Pressure
+                                </button>
+                                <button class="quick-action" data-message="How do I check for drug interactions?">
+                                    <span class="material-symbols-rounded">medication</span>
+                                    Drug Interactions
+                                </button>
+                                <button class="quick-action" data-message="What should I do for a headache?">
+                                    <span class="material-symbols-rounded">psychology</span>
+                                    Headache Relief
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="messageInput" 
+                                placeholder="Ask me about your health..."
+                                rows="1"
+                                maxlength="2000"
+                            ></textarea>
+                            <div class="input-actions">
+                                <button id="voiceInputBtn" class="action-btn" title="Voice Input">
+                                    <span class="material-symbols-rounded">mic</span>
+                                </button>
+                                <button id="attachBtn" class="action-btn" title="Attach Image">
+                                    <span class="material-symbols-rounded">attach_file</span>
+                                </button>
+                                <button id="sendBtn" class="send-btn" title="Send Message">
+                                    <span class="material-symbols-rounded">send</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="input-footer">
+                            <small>Cura provides health information for educational purposes. Always consult healthcare professionals for medical decisions.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voice Assistant View -->
+            <div id="voiceView" class="view">
+                <div class="voice-container">
+                    <div class="voice-interface">
+                        <div class="voice-visualizer">
+                            <div class="voice-circle">
+                                <span class="material-symbols-rounded">mic</span>
+                            </div>
+                            <div class="sound-waves">
+                                <div class="wave"></div>
+                                <div class="wave"></div>
+                                <div class="wave"></div>
+                                <div class="wave"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="voice-content">
+                            <h2 id="voiceStatus">Tap to speak</h2>
+                            <p id="voiceTranscript">Your voice will appear here...</p>
+                            
+                            <div class="voice-controls">
+                                <button id="voiceStartBtn" class="voice-btn primary">
+                                    <span class="material-symbols-rounded">mic</span>
+                                    Start Recording
+                                </button>
+                                <button id="voiceStopBtn" class="voice-btn secondary hidden">
+                                    <span class="material-symbols-rounded">stop</span>
+                                    Stop Recording
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="voiceResponse" class="voice-response hidden">
+                        <h3>Cura's Response:</h3>
+                        <p id="voiceResponseText"></p>
+                        
+                        <div class="voice-actions">
+                            <button id="playResponseBtn" class="action-btn">
+                                <span class="material-symbols-rounded">play_arrow</span>
+                                Play Response
+                            </button>
+                            <button id="newVoiceBtn" class="action-btn">
+                                <span class="material-symbols-rounded">refresh</span>
+                                Ask Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Symptoms View -->
+            <div id="symptomsView" class="view">
+                <div class="symptoms-container">
+                    <div class="page-header">
+                        <h1>Symptom Checker</h1>
+                        <p>Describe your symptoms and get AI-powered health insights</p>
+                    </div>
+                    
+                    <div class="symptom-form">
+                        <div class="form-section">
+                            <h3>Primary Symptom</h3>
+                            <div class="input-group">
+                                <label for="symptomName">What are you experiencing?</label>
+                                <input type="text" id="symptomName" placeholder="e.g., headache, fever, cough">
+                            </div>
+                            
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="symptomSeverity">Severity</label>
+                                    <select id="symptomSeverity">
+                                        <option value="low">Mild</option>
+                                        <option value="moderate">Moderate</option>
+                                        <option value="high">Severe</option>
+                                        <option value="critical">Critical</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label for="symptomDuration">Duration (hours)</label>
+                                    <input type="number" id="symptomDuration" min="0" placeholder="24">
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="symptomDescription">Additional Details</label>
+                                <textarea id="symptomDescription" placeholder="Describe your symptoms in more detail..."></textarea>
+                            </div>
+                            
+                            <button id="analyzeSymptoms" class="primary-btn">
+                                <span class="material-symbols-rounded">medical_information</span>
+                                Analyze Symptoms
+                            </button>
+                        </div>
+                        
+                        <div id="symptomResults" class="results-section hidden">
+                            <h3>Analysis Results</h3>
+                            <div id="symptomAnalysis" class="analysis-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other views would be implemented similarly -->
+            <div id="medicationsView" class="view">
+                <div class="page-placeholder">
+                    <span class="material-symbols-rounded">medication</span>
+                    <h2>Medications Manager</h2>
+                    <p>Coming soon - Track and manage your medications</p>
+                </div>
+            </div>
+
+            <div id="vitalsView" class="view">
+                <div class="page-placeholder">
+                    <span class="material-symbols-rounded">monitor_heart</span>
+                    <h2>Vital Signs Tracker</h2>
+                    <p>Coming soon - Monitor your vital signs</p>
+                </div>
+            </div>
+
+            <div id="imagingView" class="view">
+                <div class="page-placeholder">
+                    <span class="material-symbols-rounded">medical_services</span>
+                    <h2>Medical Image Analysis</h2>
+                    <p>Coming soon - AI-powered image analysis</p>
+                </div>
+            </div>
+
+            <div id="sessionsView" class="view">
+                <div class="page-placeholder">
+                    <span class="material-symbols-rounded">history</span>
+                    <h2>Chat History</h2>
+                    <p>Coming soon - View your previous conversations</p>
+                </div>
+            </div>
+
+            <div id="reportsView" class="view">
+                <div class="page-placeholder">
+                    <span class="material-symbols-rounded">description</span>
+                    <h2>Health Reports</h2>
+                    <p>Coming soon - Generate comprehensive health reports</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-content auth-modal">
+            <div class="auth-header">
+                <h2 id="authTitle">Welcome to Cura</h2>
+                <p id="authSubtitle">Your AI medical assistant</p>
+            </div>
+            
+            <form id="authForm" class="auth-form">
+                <div class="input-group">
+                    <label for="authEmail">Email</label>
+                    <input type="email" id="authEmail" name="email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" name="password" required>
+                </div>
+                
+                <div id="registerFields" class="register-fields hidden">
+                    <div class="input-group">
+                        <label for="authUsername">Username</label>
+                        <input type="text" id="authUsername" name="username">
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="authFirstName">First Name</label>
+                            <input type="text" id="authFirstName" name="firstName">
+                        </div>
+                        <div class="input-group">
+                            <label for="authLastName">Last Name</label>
+                            <input type="text" id="authLastName" name="lastName">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" id="authSubmitBtn" class="auth-btn">
+                    Sign In
+                </button>
+                
+                <div class="auth-footer">
+                    <p>
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <a href="#" id="authSwitchBtn">Sign up</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">
+        <div class="toast-content">
+            <span class="toast-icon material-symbols-rounded">info</span>
+            <span class="toast-message">Message</span>
+        </div>
+        <button class="toast-close">
+            <span class="material-symbols-rounded">close</span>
+        </button>
+    </div>
+
+    <!-- PWA Install Prompt -->
+    <div id="installPrompt" class="install-prompt hidden">
+        <div class="install-content">
+            <span class="material-symbols-rounded">get_app</span>
+            <div>
+                <h4>Install Cura</h4>
+                <p>Get the full app experience</p>
+            </div>
+            <button id="installBtn" class="install-btn">Install</button>
+            <button id="dismissInstall" class="close-btn">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="scripts.js"></script>
 </body>
 </html>
