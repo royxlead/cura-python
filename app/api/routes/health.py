@@ -13,6 +13,11 @@ from .auth import get_current_user
 
 router = APIRouter(prefix="/health", tags=["health-monitoring"])
 
+@router.get("/")
+async def health_check():
+    """Simple health check endpoint"""
+    return {"status": "healthy", "service": "cura-medical-ai"}
+
 @router.post("/vitals/record")
 async def record_vital_sign(
     vital_type: VitalType,

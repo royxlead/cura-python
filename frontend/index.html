@@ -1,447 +1,666 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cura - AI Medical Assistant</title>
-    <meta name="description" content="Advanced AI-powered medical assistant for healthcare information">
+    <title>Cura AI - Your Intelligent Medical Assistant</title>
+    <meta name="description" content="Advanced AI-powered medical assistant providing intelligent health guidance and medical insights">
     
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#1976d2">
+    <!-- PWA Configuration -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Cura AI">
     
-    <!-- PWA Manifest -->
+    <!-- Icons and Manifest -->
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     
-    <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    
-    <!-- Modern Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="app.css">
 </head>
 <body>
-    <!-- Loading Screen -->
+    <!-- Loading Screen - COMPLETELY DISABLED FOR DIRECT CHAT ACCESS -->
+    <!--
     <div id="loadingScreen" class="loading-screen">
-        <div class="loading-content">
-            <div class="pulse-ring">
-                <span class="material-symbols-rounded">health_and_safety</span>
+        <div class="loading-container">
+            <div class="loading-logo">
+                <div class="logo-icon">
+                    <span class="material-symbols-rounded">health_and_safety</span>
+                </div>
+                <h1>Cura AI</h1>
+                <p>Initializing your medical assistant...</p>
             </div>
-            <h2>Cura AI</h2>
-            <p>Initializing your medical assistant...</p>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
+            <div class="loading-animation">
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <div class="loading-dots">
+                    <span></span><span></span><span></span>
+                </div>
             </div>
         </div>
     </div>
+    -->
 
-    <!-- Main App Container -->
-    <div id="app" class="app-container hidden">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-left">
-                <button id="sidebarToggle" class="sidebar-toggle">
-                    <span class="material-symbols-rounded">menu</span>
-                </button>
-                <div class="logo">
-                    <span class="material-symbols-rounded">health_and_safety</span>
-                    <span class="logo-text">Cura</span>
+    <!-- Main Application Container -->
+    <div id="app" class="app-container">
+        
+        <!-- Welcome & Authentication Section - COMMENTED OUT FOR DIRECT CHAT ACCESS -->
+        <!--
+        <div id="authSection" class="auth-section hidden">
+            <!-- Background Effects -->
+            <div class="background-effects">
+                <div class="gradient-orb orb-1"></div>
+                <div class="gradient-orb orb-2"></div>
+                <div class="gradient-orb orb-3"></div>
+                <div class="floating-particles">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
                 </div>
             </div>
             
-            <div class="header-center">
-                <div class="status-indicator">
-                    <div class="status-dot online"></div>
-                    <span>AI Assistant Online</span>
+            <!-- Navigation Header -->
+            <header class="auth-header">
+                <div class="header-content">
+                    <div class="brand-logo">
+                        <div class="logo-container">
+                            <span class="material-symbols-rounded">health_and_safety</span>
+                        </div>
+                        <div class="brand-text">
+                            <h1>Cura AI</h1>
+                            <span>Medical Assistant</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                            <span class="material-symbols-rounded">dark_mode</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="header-right">
-                <button id="themeToggle" class="icon-button" title="Toggle Theme">
-                    <span class="material-symbols-rounded">dark_mode</span>
-                </button>
-                <button id="notificationsBtn" class="icon-button" title="Notifications">
-                    <span class="material-symbols-rounded">notifications</span>
-                </button>
-                <div class="user-menu">
-                    <button id="userMenuBtn" class="user-avatar">
-                        <span class="material-symbols-rounded">account_circle</span>
-                    </button>
-                    <div id="userDropdown" class="dropdown-menu">
-                        <a href="#" class="dropdown-item">
-                            <span class="material-symbols-rounded">person</span>
-                            Profile
-                        </a>
-                        <a href="#" class="dropdown-item">
+            </header>
+
+            <!-- Main Authentication Content -->
+            <main class="auth-main">
+                <!-- Welcome Section -->
+                <div id="welcomeView" class="view welcome-view active">
+                    <div class="welcome-content">
+                        <div class="welcome-hero">
+                            <div class="hero-badge">
+                                <span class="material-symbols-rounded">auto_awesome</span>
+                                <span>AI-Powered Healthcare</span>
+                            </div>
+                            <h1 class="hero-title">
+                                Your Intelligent
+                                <span class="gradient-text">Medical Companion</span>
+                            </h1>
+                            <p class="hero-description">
+                                Experience advanced AI-driven medical guidance with personalized health insights, 
+                                symptom analysis, and professional medical support available 24/7.
+                            </p>
+                        </div>
+                        
+                        <div class="feature-showcase">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <span class="material-symbols-rounded">psychology</span>
+                                </div>
+                                <h3>Smart Diagnosis</h3>
+                                <p>AI-powered symptom analysis with differential diagnosis recommendations</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <span class="material-symbols-rounded">medication</span>
+                                </div>
+                                <h3>Drug Information</h3>
+                                <p>Comprehensive medication details, interactions, and safety guidelines</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <span class="material-symbols-rounded">emergency</span>
+                                </div>
+                                <h3>Emergency Support</h3>
+                                <p>Immediate guidance for urgent medical situations and emergencies</p>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button id="getStartedBtn" class="btn btn-primary btn-large">
+                                <span>Get Started</span>
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </button>
+                            <button id="learnMoreBtn" class="btn btn-secondary btn-large">
+                                <span class="material-symbols-rounded">info</span>
+                                <span>Learn More</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Section -->
+                <div id="loginView" class="view auth-view">
+                    <div class="auth-container">
+                        <div class="auth-header-text">
+                            <h2>Welcome Back</h2>
+                            <p>Sign in to continue your healthcare journey</p>
+                        </div>
+                        
+                        <form id="loginForm" class="auth-form">
+                            <div class="form-group">
+                                <div class="input-container">
+                                    <span class="input-icon material-symbols-rounded">mail</span>
+                                    <input 
+                                        type="email" 
+                                        id="loginEmail" 
+                                        name="email" 
+                                        placeholder="Email address" 
+                                        required 
+                                        autocomplete="email"
+                                    >
+                                    <label for="loginEmail">Email</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-container">
+                                    <span class="input-icon material-symbols-rounded">lock</span>
+                                    <input 
+                                        type="password" 
+                                        id="loginPassword" 
+                                        name="password" 
+                                        placeholder="Password" 
+                                        required 
+                                        autocomplete="current-password"
+                                    >
+                                    <label for="loginPassword">Password</label>
+                                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                        <span class="material-symbols-rounded">visibility</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-options">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="remember">
+                                    <span class="checkmark"></span>
+                                    <span class="checkbox-label">Remember me</span>
+                                </label>
+                                <button type="button" class="link-button">Forgot password?</button>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <span id="loginBtnText">Sign In</span>
+                                <span id="loginBtnLoader" class="btn-loader hidden">
+                                    <span class="material-symbols-rounded">progress_activity</span>
+                                </span>
+                            </button>
+                        </form>
+                        
+                        <div class="auth-divider">
+                            <span>or continue with</span>
+                        </div>
+                        
+                        <div class="social-auth">
+                            <button type="button" class="btn btn-social google-btn">
+                                <svg class="social-icon" viewBox="0 0 24 24">
+                                    <path fill="#EA4335" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                <span>Google</span>
+                            </button>
+                            <button type="button" class="btn btn-social apple-btn">
+                                <span class="material-symbols-rounded">phone_iphone</span>
+                                <span>Apple</span>
+                            </button>
+                        </div>
+                        
+                        <div class="auth-switch">
+                            <p>Don't have an account? <button type="button" id="showSignupBtn" class="link-button">Sign up</button></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signup Section -->
+                <div id="signupView" class="view auth-view">
+                    <div class="auth-container">
+                        <div class="auth-header-text">
+                            <h2>Create Account</h2>
+                            <p>Join thousands who trust Cura with their health</p>
+                        </div>
+                        
+                        <form id="signupForm" class="auth-form">
+                            <div class="form-group">
+                                <div class="input-container">
+                                    <span class="input-icon material-symbols-rounded">alternate_email</span>
+                                    <input 
+                                        type="text" 
+                                        id="signupUsername" 
+                                        name="username" 
+                                        placeholder="Username" 
+                                        required 
+                                        minlength="3"
+                                        maxlength="50"
+                                        autocomplete="username"
+                                    >
+                                    <label for="signupUsername">Username</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-container">
+                                        <span class="input-icon material-symbols-rounded">person</span>
+                                        <input 
+                                            type="text" 
+                                            id="firstName" 
+                                            name="firstName" 
+                                            placeholder="First name" 
+                                            required
+                                            autocomplete="given-name"
+                                        >
+                                        <label for="firstName">First Name</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-container">
+                                        <span class="input-icon material-symbols-rounded">person</span>
+                                        <input 
+                                            type="text" 
+                                            id="lastName" 
+                                            name="lastName" 
+                                            placeholder="Last name" 
+                                            required
+                                            autocomplete="family-name"
+                                        >
+                                        <label for="lastName">Last Name</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-container">
+                                    <span class="input-icon material-symbols-rounded">mail</span>
+                                    <input 
+                                        type="email" 
+                                        id="signupEmail" 
+                                        name="email" 
+                                        placeholder="Email address" 
+                                        required
+                                        autocomplete="email"
+                                    >
+                                    <label for="signupEmail">Email</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-container">
+                                    <span class="input-icon material-symbols-rounded">lock</span>
+                                    <input 
+                                        type="password" 
+                                        id="signupPassword" 
+                                        name="password" 
+                                        placeholder="Password" 
+                                        required 
+                                        minlength="8"
+                                        autocomplete="new-password"
+                                    >
+                                    <label for="signupPassword">Password</label>
+                                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                        <span class="material-symbols-rounded">visibility</span>
+                                    </button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill"></div>
+                                    </div>
+                                    <span class="strength-text">Password strength: Weak</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-container">
+                                    <span class="input-icon material-symbols-rounded">lock</span>
+                                    <input 
+                                        type="password" 
+                                        id="confirmPassword" 
+                                        name="confirmPassword" 
+                                        placeholder="Confirm password" 
+                                        required
+                                        autocomplete="new-password"
+                                    >
+                                    <label for="confirmPassword">Confirm Password</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-options">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="terms" required>
+                                    <span class="checkmark"></span>
+                                    <span class="checkbox-label">
+                                        I agree to the <button type="button" class="link-button">Terms of Service</button> 
+                                        and <button type="button" class="link-button">Privacy Policy</button>
+                                    </span>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <span id="signupBtnText">Create Account</span>
+                                <span id="signupBtnLoader" class="btn-loader hidden">
+                                    <span class="material-symbols-rounded">progress_activity</span>
+                                </span>
+                            </button>
+                        </form>
+                        
+                        <div class="auth-divider">
+                            <span>or continue with</span>
+                        </div>
+                        
+                        <div class="social-auth">
+                            <button type="button" class="btn btn-social google-btn">
+                                <svg class="social-icon" viewBox="0 0 24 24">
+                                    <path fill="#EA4335" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                <span>Google</span>
+                            </button>
+                            <button type="button" class="btn btn-social apple-btn">
+                                <span class="material-symbols-rounded">phone_iphone</span>
+                                <span>Apple</span>
+                            </button>
+                        </div>
+                        
+                        <div class="auth-switch">
+                            <p>Already have an account? <button type="button" id="showLoginBtn" class="link-button">Sign in</button></p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        -->
+
+        <!-- Chat Application Section -->
+        <div id="chatSection" class="chat-section">
+            <!-- Chat Header -->
+            <header class="chat-header">
+                <div class="header-left">
+                    <div class="app-logo">
+                        <span class="material-symbols-rounded">health_and_safety</span>
+                        <div class="logo-text">
+                            <h1>Cura AI</h1>
+                            <span class="status-indicator">
+                                <span class="status-dot"></span>
+                                Online
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-center">
+                    <div class="user-greeting">
+                        <span id="userGreeting">Welcome back!</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="action-btn" id="settingsBtn" aria-label="Settings">
                             <span class="material-symbols-rounded">settings</span>
-                            Settings
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item" id="logoutBtn">
-                            <span class="material-symbols-rounded">logout</span>
-                            Logout
-                        </a>
+                        </button>
+                        <button class="action-btn" id="helpBtn" aria-label="Help">
+                            <span class="material-symbols-rounded">help</span>
+                        </button>
+                        <div class="user-menu">
+                            <button class="user-avatar" id="userMenuBtn">
+                                <span class="material-symbols-rounded">account_circle</span>
+                            </button>
+                            <div class="user-dropdown" id="userDropdown">
+                                <div class="dropdown-header">
+                                    <div class="user-info">
+                                        <div class="user-name" id="userName">User</div>
+                                        <div class="user-email" id="userEmail">user@example.com</div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item">
+                                        <span class="material-symbols-rounded">person</span>
+                                        <span>Profile</span>
+                                    </button>
+                                    <button class="dropdown-item">
+                                        <span class="material-symbols-rounded">history</span>
+                                        <span>Chat History</span>
+                                    </button>
+                                    <button class="dropdown-item">
+                                        <span class="material-symbols-rounded">settings</span>
+                                        <span>Settings</span>
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item" id="logoutBtn">
+                                        <span class="material-symbols-rounded">logout</span>
+                                        <span>Sign Out</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar">
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <h3>Assistant</h3>
-                    <a href="#" class="nav-item active" data-view="chat">
-                        <span class="material-symbols-rounded">chat</span>
-                        <span>Chat</span>
-                    </a>
-                    <a href="#" class="nav-item" data-view="voice">
-                        <span class="material-symbols-rounded">mic</span>
-                        <span>Voice Assistant</span>
-                    </a>
-                </div>
-                
-                <div class="nav-section">
-                    <h3>Health Tools</h3>
-                    <a href="#" class="nav-item" data-view="symptoms">
-                        <span class="material-symbols-rounded">medical_information</span>
-                        <span>Symptom Checker</span>
-                    </a>
-                    <a href="#" class="nav-item" data-view="medications">
-                        <span class="material-symbols-rounded">medication</span>
-                        <span>Medications</span>
-                    </a>
-                    <a href="#" class="nav-item" data-view="vitals">
-                        <span class="material-symbols-rounded">monitor_heart</span>
-                        <span>Vital Signs</span>
-                    </a>
-                    <a href="#" class="nav-item" data-view="imaging">
-                        <span class="material-symbols-rounded">medical_services</span>
-                        <span>Image Analysis</span>
-                    </a>
-                </div>
-                
-                <div class="nav-section">
-                    <h3>History</h3>
-                    <a href="#" class="nav-item" data-view="sessions">
-                        <span class="material-symbols-rounded">history</span>
-                        <span>Chat History</span>
-                    </a>
-                    <a href="#" class="nav-item" data-view="reports">
-                        <span class="material-symbols-rounded">description</span>
-                        <span>Health Reports</span>
-                    </a>
-                </div>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="upgrade-prompt">
-                    <span class="material-symbols-rounded">star</span>
-                    <div>
-                        <h4>Upgrade to Pro</h4>
-                        <p>Get advanced features</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Chat View -->
-            <div id="chatView" class="view active">
+            <!-- Chat Main Content -->
+            <main class="chat-main">
                 <div class="chat-container">
-                    <div class="chat-header">
-                        <h1>Medical AI Assistant</h1>
-                        <p>Ask me anything about your health, symptoms, medications, or medical conditions.</p>
-                    </div>
-                    
-                    <div id="chatMessages" class="chat-messages">
-                        <div class="welcome-message">
-                            <div class="welcome-icon">
+                    <!-- Chat Messages Area -->
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Welcome Message -->
+                        <div class="message ai-message welcome-message">
+                            <div class="message-avatar ai-avatar">
                                 <span class="material-symbols-rounded">health_and_safety</span>
                             </div>
-                            <h2>Hello! I'm Cura, your AI medical assistant</h2>
-                            <p>I can help you with health information, symptom analysis, medication guidance, and more. How can I assist you today?</p>
-                            
-                            <div class="quick-actions">
-                                <button class="quick-action" data-message="What are the symptoms of flu?">
-                                    <span class="material-symbols-rounded">sick</span>
-                                    Flu Symptoms
-                                </button>
-                                <button class="quick-action" data-message="Tell me about high blood pressure">
-                                    <span class="material-symbols-rounded">monitor_heart</span>
-                                    Blood Pressure
-                                </button>
-                                <button class="quick-action" data-message="How do I check for drug interactions?">
-                                    <span class="material-symbols-rounded">medication</span>
-                                    Drug Interactions
-                                </button>
-                                <button class="quick-action" data-message="What should I do for a headache?">
-                                    <span class="material-symbols-rounded">psychology</span>
-                                    Headache Relief
-                                </button>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <span class="sender-name">Cura AI</span>
+                                    <span class="message-time">Just now</span>
+                                </div>
+                                <div class="message-body">
+                                    <div class="welcome-text">
+                                        <h3>👋 Hello! I'm Cura, your AI medical assistant.</h3>
+                                        <p>I'm here to help you with your health questions and concerns. I can assist you with:</p>
+                                        <ul class="feature-list">
+                                            <li>🔍 <strong>Symptom Analysis</strong> - Analyze your symptoms and provide differential diagnosis</li>
+                                            <li>💊 <strong>Medication Information</strong> - Details about drugs, interactions, and side effects</li>
+                                            <li>🏥 <strong>Health Guidance</strong> - General medical advice and health tips</li>
+                                            <li>🚨 <strong>Emergency Support</strong> - Immediate guidance for urgent situations</li>
+                                        </ul>
+                                        <p><strong>How can I help you today?</strong></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="chat-input-container">
-                        <div class="input-wrapper">
-                            <textarea 
-                                id="messageInput" 
-                                placeholder="Ask me about your health..."
-                                rows="1"
-                                maxlength="2000"
-                            ></textarea>
-                            <div class="input-actions">
-                                <button id="voiceInputBtn" class="action-btn" title="Voice Input">
-                                    <span class="material-symbols-rounded">mic</span>
-                                </button>
-                                <button id="attachBtn" class="action-btn" title="Attach Image">
-                                    <span class="material-symbols-rounded">attach_file</span>
-                                </button>
-                                <button id="sendBtn" class="send-btn" title="Send Message">
-                                    <span class="material-symbols-rounded">send</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="input-footer">
-                            <small>Cura provides health information for educational purposes. Always consult healthcare professionals for medical decisions.</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Voice Assistant View -->
-            <div id="voiceView" class="view">
-                <div class="voice-container">
-                    <div class="voice-interface">
-                        <div class="voice-visualizer">
-                            <div class="voice-circle">
-                                <span class="material-symbols-rounded">mic</span>
-                            </div>
-                            <div class="sound-waves">
-                                <div class="wave"></div>
-                                <div class="wave"></div>
-                                <div class="wave"></div>
-                                <div class="wave"></div>
-                            </div>
+                    <!-- Quick Suggestions -->
+                    <div class="quick-suggestions" id="quickSuggestions">
+                        <div class="suggestions-header">
+                            <span class="material-symbols-rounded">lightbulb</span>
+                            <span>Quick Questions</span>
                         </div>
-                        
-                        <div class="voice-content">
-                            <h2 id="voiceStatus">Tap to speak</h2>
-                            <p id="voiceTranscript">Your voice will appear here...</p>
-                            
-                            <div class="voice-controls">
-                                <button id="voiceStartBtn" class="voice-btn primary">
-                                    <span class="material-symbols-rounded">mic</span>
-                                    Start Recording
-                                </button>
-                                <button id="voiceStopBtn" class="voice-btn secondary hidden">
-                                    <span class="material-symbols-rounded">stop</span>
-                                    Stop Recording
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="voiceResponse" class="voice-response hidden">
-                        <h3>Cura's Response:</h3>
-                        <p id="voiceResponseText"></p>
-                        
-                        <div class="voice-actions">
-                            <button id="playResponseBtn" class="action-btn">
-                                <span class="material-symbols-rounded">play_arrow</span>
-                                Play Response
+                        <div class="suggestions-grid">
+                            <button class="suggestion-card" data-message="I have a headache and fever. What could be the cause?">
+                                <span class="material-symbols-rounded">psychology</span>
+                                <span>Symptom Check</span>
                             </button>
-                            <button id="newVoiceBtn" class="action-btn">
-                                <span class="material-symbols-rounded">refresh</span>
-                                Ask Again
+                            <button class="suggestion-card" data-message="What are the side effects of ibuprofen?">
+                                <span class="material-symbols-rounded">medication</span>
+                                <span>Drug Info</span>
+                            </button>
+                            <button class="suggestion-card" data-message="How do I read my blood test results?">
+                                <span class="material-symbols-rounded">lab_profile</span>
+                                <span>Lab Results</span>
+                            </button>
+                            <button class="suggestion-card emergency" data-message="EMERGENCY: I'm experiencing chest pain">
+                                <span class="material-symbols-rounded">emergency</span>
+                                <span>Emergency</span>
                             </button>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Symptoms View -->
-            <div id="symptomsView" class="view">
-                <div class="symptoms-container">
-                    <div class="page-header">
-                        <h1>Symptom Checker</h1>
-                        <p>Describe your symptoms and get AI-powered health insights</p>
-                    </div>
-                    
-                    <div class="symptom-form">
-                        <div class="form-section">
-                            <h3>Primary Symptom</h3>
-                            <div class="input-group">
-                                <label for="symptomName">What are you experiencing?</label>
-                                <input type="text" id="symptomName" placeholder="e.g., headache, fever, cough">
-                            </div>
-                            
-                            <div class="input-row">
-                                <div class="input-group">
-                                    <label for="symptomSeverity">Severity</label>
-                                    <select id="symptomSeverity">
-                                        <option value="low">Mild</option>
-                                        <option value="moderate">Moderate</option>
-                                        <option value="high">Severe</option>
-                                        <option value="critical">Critical</option>
-                                    </select>
+                    <!-- Chat Input Area -->
+                    <div class="chat-input-area">
+                        <div class="input-container">
+                            <div class="input-wrapper">
+                                <div class="input-actions-left">
+                                    <button class="input-action-btn" id="attachBtn" aria-label="Attach file">
+                                        <span class="material-symbols-rounded">attach_file</span>
+                                    </button>
                                 </div>
                                 
-                                <div class="input-group">
-                                    <label for="symptomDuration">Duration (hours)</label>
-                                    <input type="number" id="symptomDuration" min="0" placeholder="24">
+                                <div class="message-input-container">
+                                    <textarea 
+                                        id="messageInput" 
+                                        class="message-input" 
+                                        placeholder="Ask me about your health concerns, symptoms, or medications..."
+                                        rows="1"
+                                        maxlength="2000"
+                                    ></textarea>
+                                    <div class="input-overlay">
+                                        <div class="character-count">
+                                            <span id="charCount">0</span>/2000
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="input-actions-right">
+                                    <button class="input-action-btn" id="voiceBtn" aria-label="Voice input">
+                                        <span class="material-symbols-rounded">mic</span>
+                                    </button>
+                                    <button class="send-btn" id="sendBtn" disabled aria-label="Send message">
+                                        <span class="material-symbols-rounded">send</span>
+                                    </button>
                                 </div>
                             </div>
                             
-                            <div class="input-group">
-                                <label for="symptomDescription">Additional Details</label>
-                                <textarea id="symptomDescription" placeholder="Describe your symptoms in more detail..."></textarea>
+                            <div class="input-footer">
+                                <div class="quick-actions">
+                                    <button class="quick-action" data-action="symptoms">
+                                        <span class="material-symbols-rounded">healing</span>
+                                        <span>Symptoms</span>
+                                    </button>
+                                    <button class="quick-action" data-action="medication">
+                                        <span class="material-symbols-rounded">pill</span>
+                                        <span>Medication</span>
+                                    </button>
+                                    <button class="quick-action" data-action="emergency">
+                                        <span class="material-symbols-rounded">local_hospital</span>
+                                        <span>Emergency</span>
+                                    </button>
+                                </div>
+                                <div class="ai-status">
+                                    <span class="status-indicator">
+                                        <span class="status-dot"></span>
+                                        AI Ready
+                                    </span>
+                                </div>
                             </div>
-                            
-                            <button id="analyzeSymptoms" class="primary-btn">
-                                <span class="material-symbols-rounded">medical_information</span>
-                                Analyze Symptoms
-                            </button>
-                        </div>
-                        
-                        <div id="symptomResults" class="results-section hidden">
-                            <h3>Analysis Results</h3>
-                            <div id="symptomAnalysis" class="analysis-content"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Other views would be implemented similarly -->
-            <div id="medicationsView" class="view">
-                <div class="page-placeholder">
-                    <span class="material-symbols-rounded">medication</span>
-                    <h2>Medications Manager</h2>
-                    <p>Coming soon - Track and manage your medications</p>
-                </div>
-            </div>
-
-            <div id="vitalsView" class="view">
-                <div class="page-placeholder">
-                    <span class="material-symbols-rounded">monitor_heart</span>
-                    <h2>Vital Signs Tracker</h2>
-                    <p>Coming soon - Monitor your vital signs</p>
-                </div>
-            </div>
-
-            <div id="imagingView" class="view">
-                <div class="page-placeholder">
-                    <span class="material-symbols-rounded">medical_services</span>
-                    <h2>Medical Image Analysis</h2>
-                    <p>Coming soon - AI-powered image analysis</p>
-                </div>
-            </div>
-
-            <div id="sessionsView" class="view">
-                <div class="page-placeholder">
-                    <span class="material-symbols-rounded">history</span>
-                    <h2>Chat History</h2>
-                    <p>Coming soon - View your previous conversations</p>
-                </div>
-            </div>
-
-            <div id="reportsView" class="view">
-                <div class="page-placeholder">
-                    <span class="material-symbols-rounded">description</span>
-                    <h2>Health Reports</h2>
-                    <p>Coming soon - Generate comprehensive health reports</p>
-                </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
-    <!-- Authentication Modal -->
-    <div id="authModal" class="modal-overlay">
-        <div class="modal-content auth-modal">
-            <div class="auth-header">
-                <h2 id="authTitle">Welcome to Cura</h2>
-                <p id="authSubtitle">Your AI medical assistant</p>
-            </div>
-            
-            <form id="authForm" class="auth-form">
-                <div class="input-group">
-                    <label for="authEmail">Email</label>
-                    <input type="email" id="authEmail" name="email" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="authPassword">Password</label>
-                    <input type="password" id="authPassword" name="password" required>
-                </div>
-                
-                <div id="registerFields" class="register-fields hidden">
-                    <div class="input-group">
-                        <label for="authUsername">Username</label>
-                        <input type="text" id="authUsername" name="username">
-                    </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="authFirstName">First Name</label>
-                            <input type="text" id="authFirstName" name="firstName">
-                        </div>
-                        <div class="input-group">
-                            <label for="authLastName">Last Name</label>
-                            <input type="text" id="authLastName" name="lastName">
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" id="authSubmitBtn" class="auth-btn">
-                    Sign In
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal" id="settingsModal">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" aria-label="Close">
+                    <span class="material-symbols-rounded">close</span>
                 </button>
-                
-                <div class="auth-footer">
-                    <p>
-                        <span id="authSwitchText">Don't have an account?</span>
-                        <a href="#" id="authSwitchBtn">Sign up</a>
-                    </p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="toast hidden">
-        <div class="toast-content">
-            <span class="toast-icon material-symbols-rounded">info</span>
-            <span class="toast-message">Message</span>
-        </div>
-        <button class="toast-close">
-            <span class="material-symbols-rounded">close</span>
-        </button>
-    </div>
-
-    <!-- PWA Install Prompt -->
-    <div id="installPrompt" class="install-prompt hidden">
-        <div class="install-content">
-            <span class="material-symbols-rounded">get_app</span>
-            <div>
-                <h4>Install Cura</h4>
-                <p>Get the full app experience</p>
             </div>
-            <button id="installBtn" class="install-btn">Install</button>
-            <button id="dismissInstall" class="close-btn">
-                <span class="material-symbols-rounded">close</span>
-            </button>
+            <div class="modal-body">
+                <p>Settings content coming soon...</p>
+            </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="scripts.js"></script>
+    <script>
+        // Immediately hide loading screen and show chat
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded - forcing chat interface');
+            
+            // Hide loading screen immediately
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+            }
+            
+            // Show chat section immediately
+            const chatSection = document.getElementById('chatSection');
+            if (chatSection) {
+                chatSection.classList.remove('hidden');
+            }
+            
+            // Hide auth section 
+            const authSection = document.getElementById('authSection');
+            if (authSection) {
+                authSection.classList.add('hidden');
+            }
+        });
+        
+        // Clear service worker and caches to fix loading issues
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                    console.log('Service Worker unregistered');
+                }
+            });
+        }
+        
+        // Clear all caches
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                    console.log('Cache deleted:', name);
+                }
+            });
+        }
+        
+        // Failsafe: Force show chat after 3 seconds no matter what
+        setTimeout(function() {
+            console.log('Failsafe activated - forcing chat interface');
+            const chatSection = document.getElementById('chatSection');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            if (chatSection) {
+                chatSection.classList.remove('hidden');
+                chatSection.style.display = 'flex';
+            }
+            
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+    <script src="app.js"></script>
 </body>
 </html>

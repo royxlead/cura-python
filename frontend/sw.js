@@ -3,20 +3,31 @@
  * Provides offline functionality, caching, and background sync
  */
 
-const CACHE_NAME = 'cura-ai-v1.0.0';
-const STATIC_CACHE = 'cura-static-v1.0.0';
-const DYNAMIC_CACHE = 'cura-dynamic-v1.0.0';
+const CACHE_NAME = 'cura-ai-v2.0.0';
+const STATIC_CACHE = 'cura-static-v2.0.0';
+const DYNAMIC_CACHE = 'cura-dynamic-v2.0.0';
 
 // Files to cache for offline functionality
 const STATIC_FILES = [
     '/',
-    '/frontend/index.html',
-    '/frontend/style.css',
-    '/frontend/scripts.js',
+    '/index.html',
+    '/app.css',
+    '/app.js',
+    '/favicon.svg',
     '/manifest.json',
+    // Only cache these if they exist
+    // '/icons/icon-72x72.svg',
+    // '/icons/icon-96x96.svg',
+    // '/icons/icon-128x128.svg',
+    // '/icons/icon-144x144.svg',
+    // '/icons/icon-152x152.svg',
+    // '/icons/icon-192x192.svg',
+    // '/icons/icon-384x384.svg',
+    // '/icons/icon-512x512.svg',
     // Add other static assets
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-    'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0'
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap',
+    'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap',
+    'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200'
 ];
 
 // API endpoints that should be cached
@@ -34,16 +45,28 @@ self.addEventListener('install', (event) => {
     
     event.waitUntil(
         caches.open(STATIC_CACHE)
-            .then((cache) => {
+            .then(async (cache) => {
                 console.log('Service Worker: Caching static files');
-                return cache.addAll(STATIC_FILES);
-            })
-            .then(() => {
-                console.log('Service Worker: Static files cached successfully');
+                
+                // Cache files individually to handle failures gracefully
+                const cachePromises = STATIC_FILES.map(async (file) => {
+                    try {
+                        await cache.add(file);
+                        console.log('Service Worker: Cached', file);
+                    } catch (error) {
+                        console.warn('Service Worker: Failed to cache', file, error);
+                        // Continue with other files even if one fails
+                    }
+                });
+                
+                await Promise.all(cachePromises);
+                console.log('Service Worker: Static files cached (with possible failures)');
                 return self.skipWaiting();
             })
             .catch((error) => {
-                console.error('Service Worker: Failed to cache static files', error);
+                console.error('Service Worker: Failed to open cache', error);
+                // Still skip waiting to not block the installation
+                return self.skipWaiting();
             })
     );
 });
@@ -75,22 +98,34 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
-    
+
+    // Ignore non-http(s) schemes (e.g., chrome-extension) and non-GET requests
+    if (request.method !== 'GET') {
+        return; // let the browser handle it
+    }
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        return; // do not intercept browser/extension requests
+    }
+
+    // Only handle same-origin requests during fetch to prevent caching issues
+    // Cross-origin assets (e.g., Google Fonts) are pre-cached during install via cache.addAll
+    if (url.origin !== self.location.origin) {
+        return; // skip interception for cross-origin at runtime
+    }
+
     // Handle different types of requests
-    if (request.method === 'GET') {
-        if (isStaticFile(request.url)) {
-            // Static files - cache first strategy
-            event.respondWith(cacheFirst(request));
-        } else if (isCacheableAPI(request.url)) {
-            // API requests - network first with cache fallback
-            event.respondWith(networkFirstWithCache(request));
-        } else if (isAPIRequest(request.url)) {
-            // Other API requests - network only with offline fallback
-            event.respondWith(networkOnlyWithOfflineFallback(request));
-        } else {
-            // Default strategy
-            event.respondWith(networkFirstWithCache(request));
-        }
+    if (isStaticFile(request.url)) {
+        // Static files - cache first strategy
+        event.respondWith(cacheFirst(request));
+    } else if (isCacheableAPI(request.url)) {
+        // API requests - network first with cache fallback
+        event.respondWith(networkFirstWithCache(request));
+    } else if (isAPIRequest(request.url)) {
+        // Other API requests - network only with offline fallback
+        event.respondWith(networkOnlyWithOfflineFallback(request));
+    } else {
+        // Default strategy
+        event.respondWith(networkFirstWithCache(request));
     }
 });
 
@@ -200,6 +235,11 @@ self.addEventListener('message', (event) => {
 // Caching strategies
 async function cacheFirst(request) {
     try {
+        // Guard: only cache http(s) requests
+        const url = new URL(request.url);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+            return fetch(request);
+        }
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
             return cachedResponse;
@@ -221,6 +261,11 @@ async function cacheFirst(request) {
 
 async function networkFirstWithCache(request) {
     try {
+        // Guard: only cache http(s) requests
+        const url = new URL(request.url);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+            return fetch(request);
+        }
         const networkResponse = await fetch(request);
         
         if (networkResponse.ok) {

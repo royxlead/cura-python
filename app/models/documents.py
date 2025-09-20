@@ -6,8 +6,8 @@ Using Beanie ODM for async MongoDB operations with Pydantic validation
 from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any, Union
 from enum import Enum
-from beanie import Document, Indexed
-from pydantic import BaseModel, Field, EmailStr, validator
+from beanie import Document, Indexed, PydanticObjectId
+from pydantic import BaseModel, Field, EmailStr, validator, ConfigDict
 from pymongo import IndexModel
 import bcrypt
 from bson import ObjectId
@@ -71,8 +71,8 @@ class User(Document):
     """User document model"""
     
     # Authentication fields
-    username: Indexed(str, unique=True)
-    email: Indexed(EmailStr, unique=True)
+    username: str = Field(..., unique=True)
+    email: EmailStr = Field(..., unique=True)
     password_hash: str
     
     # Profile information
@@ -129,7 +129,7 @@ class User(Document):
 class ChatSession(Document):
     """Chat session document model"""
     
-    user_id: Indexed(ObjectId)
+    user_id: PydanticObjectId = Field(..., description="User ID")
     title: str = "New Chat"
     
     # Session metadata
@@ -166,7 +166,7 @@ class ChatSession(Document):
 class Message(Document):
     """Chat message document model"""
     
-    session_id: Indexed(ObjectId)
+    session_id: PydanticObjectId = Field(..., description="Chat session ID")
     
     # Message content
     role: MessageRole
@@ -204,8 +204,8 @@ class Message(Document):
 class MedicalRecord(Document):
     """Medical record document model"""
     
-    user_id: Indexed(ObjectId)
-    record_type: Indexed(RecordType)
+    user_id: PydanticObjectId = Field(..., description="User ID")
+    record_type: RecordType = Field(..., description="Type of medical record")
     
     # Record content
     title: str
@@ -246,7 +246,7 @@ class MedicalRecord(Document):
 class Symptom(Document):
     """Symptom tracking document model"""
     
-    user_id: Indexed(ObjectId)
+    user_id: PydanticObjectId = Field(..., description="User ID")
     
     # Symptom details
     name: str
@@ -285,7 +285,7 @@ class Symptom(Document):
 class Medication(Document):
     """Medication tracking document model"""
     
-    user_id: Indexed(ObjectId)
+    user_id: PydanticObjectId = Field(..., description="User ID")
     
     # Medication details
     name: str
@@ -330,10 +330,10 @@ class Medication(Document):
 class InteractionCheck(Document):
     """Drug interaction checking document model"""
     
-    user_id: Indexed(ObjectId)
+    user_id: PydanticObjectId = Field(..., description="User ID")
     
     # Medications involved
-    medication_ids: List[ObjectId]
+    medication_ids: List[PydanticObjectId]
     medication_names: List[str]
     
     # Interaction details
@@ -354,7 +354,7 @@ class InteractionCheck(Document):
     
     # Status
     is_acknowledged: bool = False
-    acknowledged_by: Optional[ObjectId] = None
+    acknowledged_by: Optional[PydanticObjectId] = None
     acknowledged_at: Optional[datetime] = None
     
     class Settings:
@@ -370,7 +370,7 @@ class InteractionCheck(Document):
 class VitalSigns(Document):
     """Vital signs tracking document model"""
     
-    user_id: Indexed(ObjectId)
+    user_id: PydanticObjectId = Field(..., description="User ID")
     
     # Vital sign measurements
     systolic_bp: Optional[int] = None  # mmHg

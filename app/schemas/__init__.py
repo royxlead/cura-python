@@ -36,7 +36,7 @@ class UserProfile(BaseModel):
 
 # Chat schemas
 class ChatMessage(BaseModel):
-    role: str = Field(..., regex="^(user|assistant|system)$")
+    role: str = Field(..., pattern="^(user|assistant|system)$")
     content: str = Field(..., min_length=1)
     timestamp: Optional[datetime] = None
 
@@ -66,7 +66,7 @@ class ChatHistory(BaseModel):
 # Medical schemas  
 class SymptomInput(BaseModel):
     name: str
-    severity: str = Field(..., regex="^(low|moderate|high|critical)$")
+    severity: str = Field(..., pattern="^(low|moderate|high|critical)$")
     duration_hours: Optional[int] = Field(None, ge=0)
     description: Optional[str] = None
     body_location: Optional[str] = None
@@ -125,7 +125,7 @@ class MedicationAnalysisResponse(BaseModel):
 
 class DocumentAnalysisRequest(BaseModel):
     document_text: str = Field(..., min_length=10)
-    document_type: str = Field(..., regex="^(lab_result|imaging|pathology|clinical_note|prescription)$")
+    document_type: str = Field(..., pattern="^(lab_result|imaging|pathology|clinical_note|prescription)$")
     patient_context: Optional[Dict[str, Any]] = None
 
 class DocumentAnalysisResponse(BaseModel):
@@ -153,7 +153,7 @@ class HealthRiskAssessmentResponse(BaseModel):
 
 # Health Monitoring Schemas
 class VitalRecordingRequest(BaseModel):
-    vital_type: str = Field(..., regex="^(blood_pressure|heart_rate|temperature|weight|blood_glucose|oxygen_saturation|respiratory_rate)$")
+    vital_type: str = Field(..., pattern="^(blood_pressure|heart_rate|temperature|weight|blood_glucose|oxygen_saturation|respiratory_rate)$")
     value: Dict[str, float]  # For BP: {"systolic": 120, "diastolic": 80}, for others: {"value": 98.6}
     notes: Optional[str] = None
     source: str = "manual"
@@ -225,7 +225,7 @@ class VoiceResponse(BaseModel):
 # Image analysis schemas
 class ImageAnalysisRequest(BaseModel):
     image_data: str  # Base64 encoded image
-    analysis_type: str = Field(..., regex="^(general|dermatology|radiology|wound)$")
+    analysis_type: str = Field(..., pattern="^(general|dermatology|radiology|wound)$")
     additional_context: Optional[str] = None
 
 class ImageAnalysisResponse(BaseModel):

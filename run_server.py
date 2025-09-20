@@ -92,7 +92,14 @@ async def shutdown_event():
 # Enhanced CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000", 
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],  # Specific origins when using credentials
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -104,18 +111,48 @@ app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
 # Include enhanced modular API routes
 try:
+    print(f"{Fore.CYAN}Loading API routes...{Style.RESET_ALL}")
+    
     from app.api.routes.chat import router as chat_router
-    from app.api.routes.auth import router as auth_router
+    print(f"{Fore.GREEN}✓ Chat router loaded{Style.RESET_ALL}")
+    
     from app.api.routes.user_auth import router as user_auth_router
+    print(f"{Fore.GREEN}✓ User auth router loaded{Style.RESET_ALL}")
+    
     from app.api.routes.health import router as health_router
+    print(f"{Fore.GREEN}✓ Health router loaded{Style.RESET_ALL}")
+    
+    # from app.api.routes.test_auth import router as test_auth_router
+    # print(f"{Fore.GREEN}✓ Test auth router loaded{Style.RESET_ALL}")
     
     app.include_router(chat_router, prefix="/api")
-    app.include_router(auth_router, prefix="/api")
+    print(f"{Fore.GREEN}✓ Chat router included{Style.RESET_ALL}")
+    
     app.include_router(user_auth_router, prefix="/api")
+    print(f"{Fore.GREEN}✓ User auth router included{Style.RESET_ALL}")
+    
     app.include_router(health_router, prefix="/api")
+    print(f"{Fore.GREEN}✓ Health router included{Style.RESET_ALL}")
+    
+    # app.include_router(test_auth_router, prefix="/api")
+    # print(f"{Fore.GREEN}✓ Test auth router included{Style.RESET_ALL}")
+    
     print(f"{Fore.GREEN}✓ Enhanced API routes enabled{Style.RESET_ALL}")
 except ImportError as e:
     print(f"{Fore.YELLOW}⚠ API routes not available: {e}{Style.RESET_ALL}")
+    import traceback
+    traceback.print_exc()
+
+# Simple diagnostic route to test if routing works
+@app.get("/api/diagnostic")
+async def diagnostic():
+    """Diagnostic endpoint to test routing"""
+    return {"message": "Diagnostic endpoint working", "timestamp": "2025-09-20"}
+
+@app.post("/api/diagnostic/test")
+async def diagnostic_test():
+    """Diagnostic POST endpoint"""
+    return {"message": "Diagnostic POST working"}
 
 # WebSocket connection manager
 class ConnectionManager:
@@ -293,6 +330,28 @@ async def get_manifest():
             "theme_color": "#2563eb",
             "background_color": "#ffffff"
         }
+
+# Frontend static files
+@app.get("/style.css")
+async def get_styles():
+    try:
+        return FileResponse("frontend/style.css")
+    except FileNotFoundError:
+        return HTMLResponse("/* Styles not found */", media_type="text/css")
+
+@app.get("/auth.js")
+async def get_auth_script():
+    try:
+        return FileResponse("frontend/auth.js")
+    except FileNotFoundError:
+        return HTMLResponse("// Auth script not available", media_type="application/javascript")
+
+@app.get("/scripts.js")
+async def get_scripts():
+    try:
+        return FileResponse("frontend/scripts.js")
+    except FileNotFoundError:
+        return HTMLResponse("// Scripts not available", media_type="application/javascript")
 
 # Service Worker
 @app.get("/sw.js")

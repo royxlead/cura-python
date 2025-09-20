@@ -13,7 +13,7 @@ import statistics
 from bson import ObjectId
 
 from app.core.database import db
-from app.models.user import User
+from app.models import User
 from app.services.ai_service import ai_service
 from app.services.medical_knowledge_service import medical_knowledge_service
 
