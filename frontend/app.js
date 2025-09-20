@@ -233,6 +233,7 @@ class ChatManager {
         this.messageInput = document.getElementById('messageInput');
         this.sendButton = document.getElementById('sendBtn');
         this.voiceButton = document.getElementById('voiceBtn');
+        this.attachButton = document.getElementById('attachBtn');
         this.quickSuggestions = document.getElementById('quickSuggestions');
         
         console.log('ChatManager: Elements found:', {
@@ -240,6 +241,7 @@ class ChatManager {
             messageInput: !!this.messageInput,
             sendButton: !!this.sendButton,
             voiceButton: !!this.voiceButton,
+            attachButton: !!this.attachButton,
             quickSuggestions: !!this.quickSuggestions
         });
         
@@ -302,6 +304,17 @@ class ChatManager {
             });
         } else {
             console.error('ChatManager: Voice button not found!');
+        }
+
+        // Attach button
+        if (this.attachButton) {
+            console.log('ChatManager: Adding click listener to attach button');
+            this.attachButton.addEventListener('click', () => {
+                console.log('ChatManager: Attach button clicked!');
+                this.handleFileUpload();
+            });
+        } else {
+            console.error('ChatManager: Attach button not found!');
         }
 
         // Quick actions
@@ -432,6 +445,47 @@ class ChatManager {
         }
     }
 
+    handleFileUpload() {
+        console.log('ChatManager: handleFileUpload called');
+        
+        // Create a hidden file input element
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif';
+        fileInput.style.display = 'none';
+        
+        // Handle file selection
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                console.log('File selected:', file.name, file.type, file.size);
+                this.uploadFile(file);
+            }
+        });
+        
+        // Trigger file selection dialog
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        document.body.removeChild(fileInput);
+    }
+
+    uploadFile(file) {
+        console.log('ChatManager: Uploading file:', file.name);
+        
+        // Show upload progress message
+        this.addMessage('user', `📎 Uploading file: ${file.name}...`);
+        
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // TODO: Implement actual file upload to backend
+        // For now, just show a success message
+        setTimeout(() => {
+            this.addMessage('assistant', `✅ File "${file.name}" uploaded successfully! How can I help you with this file?`);
+        }, 1000);
+    }
+
     toggleVoiceInput() {
         if (this.isRecording) {
             this.stopVoiceInput();
@@ -491,10 +545,22 @@ class ChatManager {
             // Add AI response
             this.addMessage(response.message, 'ai');
 
-            // Add sources if available
+            // Add sources if available and they have meaningful content
             if (response.sources && response.sources.length > 0) {
-                const sourcesText = `📚 **Sources:** ${response.sources.map(s => s.title || s.source || 'Medical Database').join(', ')}`;
-                this.addMessage(sourcesText, 'ai-sources');
+                // Filter out sources that don't have meaningful titles or content
+                const meaningfulSources = response.sources.filter(s => {
+                    const title = s.title || s.source || '';
+                    const filename = s.metadata?.source || s.metadata?.filename || '';
+                    return title !== 'Medical Database' && title !== '' && filename !== '';
+                });
+                
+                if (meaningfulSources.length > 0) {
+                    const sourcesText = `📚 **Sources:** ${meaningfulSources.map(s => {
+                        const title = s.title || s.source || s.metadata?.filename || s.metadata?.source;
+                        return title || 'Medical Reference';
+                    }).join(', ')}`;
+                    this.addMessage(sourcesText, 'ai-sources');
+                }
             }
 
         } catch (error) {

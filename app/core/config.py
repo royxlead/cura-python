@@ -4,6 +4,12 @@ Centralized settings management with validation and environment support
 """
 
 import os
+
+# Suppress Google ALTS warnings FIRST, before any other imports
+os.environ.setdefault('GRPC_VERBOSITY', 'ERROR')
+os.environ.setdefault('GLOG_minloglevel', '2')
+os.environ.setdefault('GRPC_TRACE', '')
+
 from pathlib import Path
 from typing import List, Optional
 from pydantic_settings import BaseSettings
@@ -119,6 +125,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Allow extra environment variables without validation errors
 
 # Global settings instance
 settings = Settings()

@@ -1,3 +1,16 @@
+import os
+import sys
+
+# Suppress Google ALTS warnings before any other imports
+os.environ['GRPC_VERBOSITY'] = 'ERROR'
+os.environ['GLOG_minloglevel'] = '2'
+os.environ['GRPC_TRACE'] = ''
+
+# Also suppress Python warnings if needed
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="google")
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="google")
+
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
