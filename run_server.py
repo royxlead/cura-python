@@ -22,399 +22,179 @@ import logging
 from typing import Dict, List
 from datetime import datetime
 
-# Import new modular components
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Import simple AI service
 try:
-    from app.core.database import DatabaseManager
-    from app.services.ai_service import ai_service
-    from app.services.chat_service import chat_service
-    from app.services.medical_knowledge_service import medical_knowledge_service
-    from app.services.health_monitoring_service import health_monitoring_service
-    from app.services.performance_service import performance_service
-    DATABASE_AVAILABLE = True
-    SERVICES_AVAILABLE = True
+    from app.services.simple_ai_service import ai_service
+    AI_SERVICE_AVAILABLE = True
 except ImportError as e:
-    DATABASE_AVAILABLE = False
-    SERVICES_AVAILABLE = False
-    logging.warning(f"Services not available: {e}")
+    AI_SERVICE_AVAILABLE = False
+    logging.warning(f"AI service not available: {e}")
 
-init()  # Initialize colorama
+# Initialize colorama
+init()
 
-# Enhanced FastAPI app with comprehensive features
+# Enhanced FastAPI app
 app = FastAPI(
     title="Cura Medical AI Assistant",
-    description="AI-powered medical assistant with advanced features",
+    description="AI-powered medical assistant",
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
 
-# Database and services lifecycle events
+# Initialize AI service on startup
 @app.on_event("startup")
 async def startup_event():
-    """Initialize database connection and services on startup"""
-    print(f"{Fore.CYAN}Initializing Cura Medical AI Services...{Style.RESET_ALL}")
-    
-    # Initialize database
-    if DATABASE_AVAILABLE:
-        try:
-            db_manager = DatabaseManager()
-            await db_manager.connect()
-            print(f"{Fore.GREEN}✓ MongoDB connection established{Style.RESET_ALL}")
-        except Exception as e:
-            print(f"{Fore.RED}✗ Database connection failed: {e}{Style.RESET_ALL}")
-    
-    # Initialize advanced services
-    if SERVICES_AVAILABLE:
-        try:
-            # Initialize AI service
-            await ai_service.initialize()
-            print(f"{Fore.GREEN}✓ AI Service initialized{Style.RESET_ALL}")
-            
-            # Initialize medical knowledge service
-            await medical_knowledge_service.initialize()
-            print(f"{Fore.GREEN}✓ Medical Knowledge Service initialized{Style.RESET_ALL}")
-            
-            # Initialize health monitoring service
-            await health_monitoring_service.initialize()
-            print(f"{Fore.GREEN}✓ Health Monitoring Service initialized{Style.RESET_ALL}")
-            
-            # Initialize performance optimization service
-            await performance_service.initialize()
-            print(f"{Fore.GREEN}✓ Performance Optimization Service initialized{Style.RESET_ALL}")
-            
-            print(f"{Fore.GREEN}🚀 All services initialized successfully!{Style.RESET_ALL}")
-            
-        except Exception as e:
-            print(f"{Fore.RED}✗ Service initialization failed: {e}{Style.RESET_ALL}")
+    """Initialize AI service on startup"""
+    if AI_SERVICE_AVAILABLE:
+        await ai_service.initialize()
+        print(f"{Fore.GREEN}✓ AI Service initialized{Style.RESET_ALL}")
+    else:
+        print(f"{Fore.YELLOW}⚠ AI Service not available{Style.RESET_ALL}")
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Clean up database connections and services on shutdown"""
-    print(f"{Fore.YELLOW}Shutting down Cura Medical AI Services...{Style.RESET_ALL}")
-    
-    if DATABASE_AVAILABLE:
-        try:
-            db_manager = DatabaseManager()
-            await db_manager.disconnect()
-            print(f"{Fore.YELLOW}✓ MongoDB connection closed{Style.RESET_ALL}")
-        except Exception as e:
-            print(f"{Fore.RED}✗ Database disconnect failed: {e}{Style.RESET_ALL}")
-    
-    print(f"{Fore.YELLOW}👋 Cura Medical AI shutdown complete{Style.RESET_ALL}")
-
-# Enhanced CORS middleware
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8000",
-        "http://127.0.0.1:8000", 
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000"
-    ],  # Specific origins when using credentials
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"]
 )
 
-# Mount static files for frontend
+# Serve static files
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
-# Include enhanced modular API routes
-try:
-    print(f"{Fore.CYAN}Loading API routes...{Style.RESET_ALL}")
+# AI-powered chat endpoint
+@app.post("/api/chat")
+async def chat_endpoint(request: dict):
+    """AI-powered chat endpoint using Gemini"""
+    try:
+        message = request.get("message", "")
+        
+        if not message:
+            raise HTTPException(status_code=400, detail="Message is required")
+        
+        # Use AI service if available
+        if AI_SERVICE_AVAILABLE and ai_service.is_initialized:
+            response_data = await ai_service.generate_response(message)
+            
+            return {
+                "message": response_data.get("message", "I'm sorry, I couldn't generate a response."),
+                "timestamp": response_data.get("timestamp", datetime.now().isoformat()),
+                "session_id": "guest_session",
+                "response_type": response_data.get("response_type", "standard"),
+                "sources": [],
+                "follow_up_suggestions": []
+            }
+        else:
+            # Fallback to simple responses
+            response = generate_simple_response(message)
+            return {
+                "message": response,
+                "timestamp": datetime.now().isoformat(),
+                "session_id": "guest_session",
+                "response_type": "standard"
+            }
     
-    from app.api.routes.chat import router as chat_router
-    print(f"{Fore.GREEN}✓ Chat router loaded{Style.RESET_ALL}")
-    
-    from app.api.routes.user_auth import router as user_auth_router
-    print(f"{Fore.GREEN}✓ User auth router loaded{Style.RESET_ALL}")
-    
-    from app.api.routes.health import router as health_router
-    print(f"{Fore.GREEN}✓ Health router loaded{Style.RESET_ALL}")
-    
-    # from app.api.routes.test_auth import router as test_auth_router
-    # print(f"{Fore.GREEN}✓ Test auth router loaded{Style.RESET_ALL}")
-    
-    app.include_router(chat_router, prefix="/api")
-    print(f"{Fore.GREEN}✓ Chat router included{Style.RESET_ALL}")
-    
-    app.include_router(user_auth_router, prefix="/api")
-    print(f"{Fore.GREEN}✓ User auth router included{Style.RESET_ALL}")
-    
-    app.include_router(health_router, prefix="/api")
-    print(f"{Fore.GREEN}✓ Health router included{Style.RESET_ALL}")
-    
-    # app.include_router(test_auth_router, prefix="/api")
-    # print(f"{Fore.GREEN}✓ Test auth router included{Style.RESET_ALL}")
-    
-    print(f"{Fore.GREEN}✓ Enhanced API routes enabled{Style.RESET_ALL}")
-except ImportError as e:
-    print(f"{Fore.YELLOW}⚠ API routes not available: {e}{Style.RESET_ALL}")
-    import traceback
-    traceback.print_exc()
+    except Exception as e:
+        logger.error(f"Chat endpoint error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-# Simple diagnostic route to test if routing works
-@app.get("/api/diagnostic")
-async def diagnostic():
-    """Diagnostic endpoint to test routing"""
-    return {"message": "Diagnostic endpoint working", "timestamp": "2025-09-20"}
+def generate_simple_response(message: str) -> str:
+    """Generate a simple medical AI response"""
+    message_lower = message.lower()
+    
+    # Basic keyword-based responses
+    if any(word in message_lower for word in ["headache", "pain", "hurt"]):
+        return "I understand you're experiencing pain. For headaches, consider rest, hydration, and over-the-counter pain relievers if appropriate. If pain persists or worsens, please consult a healthcare professional."
+    
+    elif any(word in message_lower for word in ["fever", "temperature", "hot"]):
+        return "Fever can be a sign of infection. Stay hydrated, rest, and monitor your temperature. If fever is high (over 101°F/38.3°C) or persists, please seek medical attention."
+    
+    elif any(word in message_lower for word in ["cold", "cough", "sneezing"]):
+        return "Cold symptoms are common. Rest, fluids, and time usually help. If symptoms worsen or last more than 10 days, consider seeing a healthcare provider."
+    
+    elif any(word in message_lower for word in ["stomach", "nausea", "vomit"]):
+        return "Stomach issues can have various causes. Try clear fluids, bland foods, and rest. If symptoms are severe or persistent, please consult a healthcare professional."
+    
+    elif any(word in message_lower for word in ["emergency", "urgent", "serious"]):
+        return "If this is a medical emergency, please call emergency services immediately (911 in the US). I'm an AI assistant and cannot provide emergency medical care."
+    
+    else:
+        return "Thank you for your message. While I can provide general health information, I always recommend consulting with a qualified healthcare professional for personalized medical advice and treatment."
 
-@app.post("/api/diagnostic/test")
-async def diagnostic_test():
-    """Diagnostic POST endpoint"""
-    return {"message": "Diagnostic POST working"}
+# Health check endpoint
+@app.get("/api/health")
+async def health_check():
+    """Simple health check"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "version": "2.0.0",
+        "services": {
+            "chat": "operational"
+        }
+    }
 
-# WebSocket connection manager
+# Serve the main page
+@app.get("/")
+async def serve_index():
+    """Serve the main application page"""
+    return FileResponse("frontend/index.html")
+
+# Simple WebSocket for real-time chat (optional)
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: Dict[str, WebSocket] = {}
-    
-    async def connect(self, websocket: WebSocket, user_id: str):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
         await websocket.accept()
-        self.active_connections[user_id] = websocket
-    
-    def disconnect(self, user_id: str):
-        if user_id in self.active_connections:
-            del self.active_connections[user_id]
-    
-    async def send_personal_message(self, message: str, user_id: str):
-        if user_id in self.active_connections:
-            websocket = self.active_connections[user_id]
-            await websocket.send_text(message)
-    
-    async def broadcast(self, message: str):
-        for websocket in self.active_connections.values():
-            await websocket.send_text(message)
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    async def send_message(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
 
 manager = ConnectionManager()
 
-# WebSocket endpoint for real-time chat
-@app.websocket("/ws/chat/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: str):
-    await manager.connect(websocket, user_id)
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
             message_data = json.loads(data)
             
-            if message_data.get("type") == "message":
-                # Process the chat message (integrate with existing chat logic)
-                user_message = message_data.get("message", "")
-                
-                # Echo back for now - integrate with RAG pipeline
-                response = {
-                    "type": "response",
-                    "message": f"Received: {user_message}",
-                    "timestamp": datetime.now().isoformat(),
-                    "user_id": user_id
-                }
-                
-                await manager.send_personal_message(json.dumps(response), user_id)
-                
+            # Generate response
+            response = generate_simple_response(message_data.get("message", ""))
+            
+            # Send response back
+            response_data = {
+                "message": response,
+                "timestamp": datetime.now().isoformat(),
+                "type": "ai_response"
+            }
+            
+            await manager.send_message(json.dumps(response_data), websocket)
+            
     except WebSocketDisconnect:
-        manager.disconnect(user_id)
-        print(f"User {user_id} disconnected from WebSocket")
-
-# Enhanced root endpoint - serve the frontend
-@app.get("/")
-async def root():
-    """Serve the main application"""
-    try:
-        return FileResponse("frontend/index.html")
-    except FileNotFoundError:
-        return HTMLResponse("""
-        <html>
-            <head><title>Cura Medical AI</title></head>
-            <body>
-                <h1>Cura Medical AI Assistant</h1>
-                <p>Frontend not found. Please check the frontend directory.</p>
-                <p>API Documentation: <a href="/docs">/docs</a></p>
-                <p>API Status: <a href="/api/status">/api/status</a></p>
-            </body>
-        </html>
-        """)
-
-# Enhanced API status endpoint
-@app.get("/api/status")
-async def api_status():
-    service_status = {}
-    
-    if SERVICES_AVAILABLE:
-        try:
-            service_status = {
-                "ai_service": ai_service.is_initialized(),
-                "medical_knowledge": medical_knowledge_service.is_initialized(),
-                "health_monitoring": health_monitoring_service.is_initialized(),
-                "performance_optimization": performance_service.is_initialized()
-            }
-        except:
-            service_status = {"services": "unavailable"}
-    
-    return {
-        "status": "healthy",
-        "message": "Cura Medical AI Assistant API is running",
-        "version": "3.0.0",
-        "features": {
-            "advanced_chat": True,
-            "differential_diagnosis": True,
-            "medication_analysis": True,
-            "health_monitoring": True,
-            "medical_knowledge_base": True,
-            "performance_optimization": True,
-            "authentication": True,
-            "websocket_support": True,
-            "database": DATABASE_AVAILABLE
-        },
-        "services": service_status,
-        "timestamp": datetime.now().isoformat()
-    }
-
-# Enhanced health check endpoint
-@app.get("/health")
-async def health_check():
-    # Check database health
-    db_status = "operational" if DATABASE_AVAILABLE else "disabled"
-    
-    # Check service health
-    service_health = {}
-    if SERVICES_AVAILABLE:
-        try:
-            service_health = {
-                "ai_service": "operational" if ai_service.is_initialized() else "initializing",
-                "medical_knowledge": "operational" if medical_knowledge_service.is_initialized() else "initializing",
-                "health_monitoring": "operational" if health_monitoring_service.is_initialized() else "initializing",
-                "performance_optimization": "operational" if performance_service.is_initialized() else "initializing"
-            }
-        except Exception as e:
-            service_health = {"error": str(e)}
-    
-    # Get performance metrics if available
-    performance_data = {}
-    if SERVICES_AVAILABLE and performance_service.is_initialized():
-        try:
-            performance_data = performance_service.get_system_performance()
-        except:
-            performance_data = {"status": "unavailable"}
-    
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "services": {
-            "api": "operational",
-            "websocket": "operational", 
-            "database": db_status,
-            "authentication": "operational",
-            **service_health
-        },
-        "performance": performance_data
-    }
-
-# Serve consolidated frontend
-@app.get("/app")
-async def serve_app():
-    try:
-        return FileResponse("frontend/index.html")
-    except FileNotFoundError:
-        return HTMLResponse("""
-        <html>
-            <head><title>Cura Medical AI</title></head>
-            <body>
-                <h1>Cura Medical AI Assistant</h1>
-                <p>Frontend not found.</p>
-                <p>API Documentation: <a href="/docs">/docs</a></p>
-            </body>
-        </html>
-        """)
-
-# PWA Manifest
-@app.get("/manifest.json")
-async def get_manifest():
-    try:
-        return FileResponse("manifest.json")
-    except FileNotFoundError:
-        return {
-            "name": "Cura Medical AI Assistant",
-            "short_name": "Cura AI",
-            "start_url": "/",
-            "display": "standalone",
-            "theme_color": "#2563eb",
-            "background_color": "#ffffff"
-        }
-
-# Frontend static files
-@app.get("/style.css")
-async def get_styles():
-    try:
-        return FileResponse("frontend/style.css")
-    except FileNotFoundError:
-        return HTMLResponse("/* Styles not found */", media_type="text/css")
-
-@app.get("/auth.js")
-async def get_auth_script():
-    try:
-        return FileResponse("frontend/auth.js")
-    except FileNotFoundError:
-        return HTMLResponse("// Auth script not available", media_type="application/javascript")
-
-@app.get("/scripts.js")
-async def get_scripts():
-    try:
-        return FileResponse("frontend/scripts.js")
-    except FileNotFoundError:
-        return HTMLResponse("// Scripts not available", media_type="application/javascript")
-
-# Service Worker
-@app.get("/sw.js")
-async def get_service_worker():
-    try:
-        return FileResponse("frontend/sw.js")
-    except FileNotFoundError:
-        return HTMLResponse("// Service worker not available", media_type="application/javascript")
-
-# Performance monitoring endpoint
-@app.get("/api/performance")
-async def get_performance_metrics():
-    """Get detailed performance metrics for system monitoring"""
-    if not SERVICES_AVAILABLE:
-        return {"error": "Performance monitoring not available"}
-    
-    try:
-        return performance_service.get_system_performance()
-    except Exception as e:
-        return {"error": f"Failed to get performance metrics: {str(e)}"}
-
-# Medical knowledge search endpoint
-@app.get("/api/medical/search")
-async def search_medical_knowledge(
-    query: str,
-    category: str = "general"
-):
-    """Search medical knowledge base"""
-    if not SERVICES_AVAILABLE:
-        return {"error": "Medical knowledge service not available"}
-    
-    try:
-        # This would integrate with the medical knowledge service
-        return {
-            "query": query,
-            "category": category,
-            "results": [],
-            "message": "Medical knowledge search endpoint - implementation pending"
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    logging.error(f"Global exception: {exc}")
-    return HTTPException(
-        status_code=500,
-        detail=str(exc)
-    )
+        manager.disconnect(websocket)
 
 if __name__ == "__main__":
-    print(f"\n{Fore.CYAN}Starting Cura Server...{Style.RESET_ALL}")
-    uvicorn.run("run_server:app", host="0.0.0.0", port=8000, reload=True)
+    print(f"{Fore.GREEN}🚀 Starting Cura Medical AI Assistant...{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}📱 Frontend: http://localhost:8000{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}📚 API Docs: http://localhost:8000/docs{Style.RESET_ALL}")
+    
+    uvicorn.run(
+        "run_server:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )
