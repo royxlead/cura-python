@@ -2,8 +2,8 @@
 Services module initialization
 """
 
-from .simple_ai_service import ai_service, SimpleAIService
+from .simple_ai_service import ai_service, EnhancedAIService
 
 __all__ = [
-    "ai_service", "SimpleAIService"
+    "ai_service", "EnhancedAIService"
 ]

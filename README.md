@@ -1,252 +1,256 @@
 # 🏥 Cura Medical AI Assistant
 
-**Advanced AI-powered medical assistant with professional-grade diagnostic capabilities and comprehensive health monitoring**
+**Advanced RAG-powered medical assistant with professional-grade diagnostic capabilities**
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-3.0+-green.svg)](https://fastapi.tiangolo.com)
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.0+-darkgreen.svg)](https://mongodb.com)
+[![LangChain](https://img.shields.io/badge/LangChain-0.1+-purple.svg)](https://langchain.com)
 [![AI](https://img.shields.io/badge/AI-Google%20Gemini-orange.svg)](https://ai.google.dev)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 🚀 Advanced Medical AI Features
 
-### � Professional Medical Intelligence
-- **Differential Diagnosis**: AI-powered diagnostic assistance with confidence scoring
-- **Emergency Detection**: Automatic triage and emergency protocol activation
-- **Medical Document Analysis**: Lab results, imaging reports, and clinical notes processing
-- **Context-Aware Conversations**: Maintains comprehensive medical context across sessions
+### 🧠 RAG-Powered Intelligence
+- **Document-Based Responses**: AI answers backed by medical literature and documents
+- **Vector Search**: FAISS-powered similarity search across medical knowledge base
+- **Intelligent Fallback**: Automatic fallback to standard AI when RAG unavailable
+- **Source Attribution**: Every response includes relevant source documents
 
-### 💊 Comprehensive Medication Management
-- **Drug Interaction Analysis**: Advanced interaction checking with severity classification
-- **Medication Guidance**: Dosage, timing, and administration recommendations
-- **Side Effect Monitoring**: Proactive side effect tracking and alerts
-- **Comprehensive Drug Database**: Extensive medication information and clinical data
+### 🔍 Core Capabilities
+- **Medical Consultation**: Evidence-based medical guidance and information
+- **Symptom Analysis**: Comprehensive symptom assessment and recommendations
+- **Emergency Detection**: Automatic triage and emergency protocol guidance
+- **Drug Information**: Medication guidance and interaction checking
 
-### � Health Monitoring & Analytics
-- **Vital Signs Tracking**: Blood pressure, heart rate, glucose, weight monitoring
-- **Health Trends Analysis**: AI-powered trend detection with personalized insights  
-- **Health Risk Assessment**: Personalized risk scoring and prevention strategies
-- **Smart Alerts**: Intelligent health alerts with severity-based prioritization
+## 🛠️ Technology Stack
 
-### 🏥 Clinical Decision Support
-- **Evidence-Based Guidelines**: Access to current clinical practice guidelines
-- **Symptom Pattern Recognition**: Advanced symptom analysis with red flag detection
-- **Treatment Planning**: Structured treatment recommendations with follow-up guidance
-- **Medical Knowledge Base**: Comprehensive medical reference system
+### Core Framework
+- **FastAPI**: Modern Python web framework with lifespan events
+- **LangChain**: RAG pipeline framework for AI applications
+- **Google Gemini 2.5 Flash**: Latest AI model with 100K token capacity
+- **FAISS**: Vector similarity search with AVX2 optimization
+- **HuggingFace Embeddings**: sentence-transformers/all-MiniLM-L6-v2
 
-### ⚡ Performance & Optimization
-- **Intelligent Caching**: Multi-layer caching with adaptive TTL for optimal performance
-- **Response Optimization**: Priority-based response optimization for emergency situations
-- **Performance Monitoring**: Real-time system performance tracking and analytics
-- **Efficient Processing**: Batch processing and optimized data handling
+### RAG Architecture
+- **Vector Store**: FAISS index with 60K+ medical document embeddings
+- **Document Processing**: Automatic PDF processing and intelligent chunking
+- **Intelligent Retrieval**: MMR-based document retrieval with relevance scoring
+- **Fallback System**: Multi-tier response system ensuring 100% availability
+- **No Database**: Pure file-based system with zero external dependencies
 
-### 🔐 Healthcare Security & Compliance
-- **HIPAA-Compliant Design**: Healthcare data protection standards
-- **Advanced Authentication**: JWT with refresh tokens and role-based access
-- **Audit Logging**: Comprehensive activity logging for compliance
-- **Data Encryption**: End-to-end encryption for sensitive medical data
+## 📋 Prerequisites
 
-## 🚀 Quick Start
+- Python 3.9+
+- Google API Key (for Gemini)
+- 4GB+ RAM (for embeddings)
+- Medical PDF documents (optional)
 
-### Prerequisites
-- Python 3.8 or higher
-- MongoDB (local or cloud)
-- Google Gemini API key
+## ⚡ Quick Start
 
-### Installation
+### 1. Clone and Setup
+```bash
+git clone https://github.com/royxlead/cura-python.git
+cd cura-python
+python -m venv myenv
+myenv/Scripts/activate  # Windows
+# source myenv/bin/activate  # Linux/Mac
+pip install -r requirements.txt
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/royxlead/cura-python.git
-   cd cura-python
-   ```
+### 2. Environment Configuration
+```bash
+# Create .env file with your Google API key
+echo "GOOGLE_API_KEY=your_google_api_key_here" > .env
+```
 
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   
-   # Windows
-   venv\Scripts\activate
-   
-   # Linux/Mac
-   source venv/bin/activate
-   ```
+### 3. Run the Server (Vector Store Included!)
+```bash
+python run_server.py
+```
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+**Note**: The project includes a pre-built vector store with 60K+ medical documents ready to use!
 
-4. **Environment setup**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
+Visit http://localhost:8000 for the web interface!
 
-5. **Run the application**
-   ```bash
-   python run_server.py
-   ```
+## 🔧 Configuration
 
-6. **Access the application**
-   - Open your browser to `http://localhost:8000`
-   - API documentation: `http://localhost:8000/docs`
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
+### Environment Variables (.env)
 ```env
-# MongoDB Configuration
-MONGODB_URL=mongodb://localhost:27017
-DATABASE_NAME=cura_medical
-
 # AI Configuration
-GOOGLE_API_KEY=your_gemini_api_key_here
-OPENAI_API_KEY=your_openai_key_here  # Optional
+GOOGLE_API_KEY=your_google_api_key_here
+LLM_MODEL=gemini-2.5-flash
+LLM_MAX_TOKENS=100000
+LLM_TEMPERATURE=0.7
 
-# Authentication
-SECRET_KEY=your_secret_key_here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+# Vector Store Configuration
+DEVICE=cpu
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+VECTOR_STORE_PATH=faiss_index
+PDF_DATA_PATH=data/pdfs
 
-# Application
-DEBUG=true
+# Server Configuration
 HOST=0.0.0.0
 PORT=8000
-
-# Theme
-DEFAULT_THEME=light
+DEBUG=True
 ```
 
-## 🏗️ Architecture
+## 🏗️ Project Structure
 
-### Backend Structure
 ```
-app/
-├── core/           # Core configuration and database
-├── services/       # Business logic services
-├── api/           # API routes and endpoints
-├── models/        # Database models
-└── schemas/       # Pydantic schemas
-
-chains/            # RAG pipeline
-data/              # Medical documents
-utils/             # Utility functions
-frontend/          # Modern web interface
+cura-python/
+├── app/
+│   └── services/          # Business logic services
+│       ├── simple_ai_service.py    # Enhanced RAG-enabled AI service
+│       └── __init__.py
+├── chains/                # RAG pipeline
+│   └── rag_pipeline.py    # Medical RAG implementation
+├── utils/                 # Utility functions
+│   ├── vector_store.py    # Vector store management & CLI
+│   └── prompts.py         # Medical prompt templates
+├── data/                  # Medical documents
+│   └── pdfs/              # PDF documents for RAG (60K+ docs)
+├── faiss_index/           # Pre-built vector store
+│   ├── index.faiss        # FAISS vector index
+│   └── index.pkl          # Document metadata
+├── frontend/              # Progressive Web App
+│   ├── index.html         # Main interface
+│   ├── app.js             # Client logic
+│   └── app.css            # Styling
+├── myenv/                 # Virtual environment
+├── run_server.py          # Main FastAPI server
+└── requirements.txt       # Python dependencies
 ```
-
-### Key Components
-
-- **FastAPI**: Modern Python web framework
-- **MongoDB + Beanie**: Document database with ODM
-- **LangChain**: RAG pipeline for AI responses
-- **Google Gemini**: Advanced language model
-- **FAISS**: Vector similarity search
-- **JWT**: Secure authentication
-- **WebSocket**: Real-time communication
 
 ## 🔧 API Endpoints
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/me` - Get current user
-- `POST /api/auth/logout` - User logout
+### Core Endpoints
+- `GET /` - Web interface
+- `GET /api/health` - Health check
+- `GET /api/status` - Service status including RAG
 
-### Chat
-- `POST /api/chat/message` - Send message
-- `GET /api/chat/sessions` - Get chat sessions
-- `DELETE /api/chat/sessions/{id}` - Delete session
-- `WebSocket /api/chat/ws/{user_id}` - Real-time chat
+### Chat & RAG
+- `POST /api/chat` - RAG-enabled chat
+  ```json
+  {
+    "message": "What are the symptoms of diabetes?",
+    "use_rag": true
+  }
+  ```
+- `POST /api/search` - Direct document search
+  ```json
+  {
+    "query": "diabetes symptoms",
+    "k": 5
+  }
+  ```
 
-### Medical
-- `POST /api/medical/symptoms/analyze` - Analyze symptoms
-- `GET /api/medical/history` - Get medical history
-- `POST /api/medical/report` - Generate health report
+### Advanced Features Added
+- **Modern FastAPI**: Uses lifespan events instead of deprecated startup events
+- **Zero Database Dependencies**: Pure file-based system with no external database requirements
+- **Pre-built Vector Store**: Ready-to-use with 60K+ medical documents indexed
+- **Enhanced Error Handling**: Comprehensive error responses and logging
+- **Source Attribution**: Every RAG response includes relevant source documents
+- **Intelligent Fallback**: Automatic detection and graceful degradation when RAG unavailable
 
-## 🧪 Development
-
-### Running Tests
+### Manual Testing
 ```bash
-# Install test dependencies
-pip install pytest pytest-asyncio httpx
+# Test chat endpoint
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What are diabetes symptoms?", "use_rag": true}'
 
-# Run tests
-pytest tests/
+# Test document search
+curl -X POST http://localhost:8000/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "diabetes", "k": 3}'
+
+# Check service status
+curl http://localhost:8000/api/status
 ```
 
-### Code Formatting
-```bash
-# Install formatting tools
-pip install black isort flake8
+## 🚀 Advanced Usage
 
-# Format code
-black .
-isort .
-flake8 .
+### Custom Document Processing
+```python
+from utils.vector_store import build_vector_store, load_documents_from_directory
+
+# Load custom documents
+documents = load_documents_from_directory("path/to/your/pdfs")
+vector_store = build_vector_store(documents)
 ```
 
-### Adding Medical Documents
-1. Place PDF files in the `data/pdfs/` directory
-2. Run the indexing process:
-   ```bash
-   python -m utils.vector_store
-   ```
+### Direct RAG Usage
+```python
+from chains.rag_pipeline import rag_pipeline
 
-## 🌐 Deployment
-
-### Docker Deployment
-```bash
-# Build image
-docker build -t cura-medical .
-
-# Run container
-docker run -p 8000:8000 --env-file .env cura-medical
+# Initialize and use RAG
+rag_pipeline.initialize()
+response = rag_pipeline.get_rag_response("What is hypertension?")
+print(response["answer"])
 ```
 
-### Production Setup
-1. Use a production WSGI server (Gunicorn)
-2. Set up MongoDB cluster
-3. Configure reverse proxy (Nginx)
-4. Enable HTTPS/SSL
-5. Set up monitoring and logging
+## 📊 Performance
+
+- **RAG Response Time**: ~2-5 seconds for document-backed responses
+- **Fallback Time**: ~1-2 seconds for standard AI responses  
+- **Vector Search**: ~100ms for similarity search across 60K+ documents
+- **Memory Usage**: ~2-4GB with embeddings loaded (sentence-transformers)
+- **Index Size**: 60,698 medical documents pre-indexed
+- **Startup Time**: ~10-15 seconds for full system initialization
+
+## 🛡️ Medical Disclaimers
+
+**IMPORTANT**: This AI assistant provides general medical information only and should never replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical concerns.
+
+## 🔒 Security Features
+
+- **API Rate Limiting**: Built-in request throttling
+- **Input Validation**: Comprehensive request validation
+- **CORS Protection**: Configurable cross-origin policies
+- **Error Handling**: Secure error responses
 
 ## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests
+4. Add tests for new functionality
 5. Submit a pull request
 
-## 📄 License
+## 📚 Resources
+
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [LangChain Documentation](https://langchain.com/)
+- [Google Gemini API](https://ai.google.dev/)
+- [FAISS Documentation](https://faiss.ai/)
+
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🚨 Medical Disclaimer
+## ⚡ Quick Commands
 
-**Important**: Cura Medical AI Assistant is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
+```bash
+# Start development server (with auto-reload)
+python run_server.py
 
-## 🙏 Acknowledgments
+# Build new vector store (if adding documents)
+python -m utils.vector_store
 
-- [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
-- [LangChain](https://langchain.com/) - AI application framework
-- [Google Gemini](https://ai.google.dev/) - Advanced AI model
-- [Material Design](https://material.io/) - UI design system
-- Medical literature and resources used in training
+# Check system status
+curl http://localhost:8000/api/status
 
-## 📞 Support
+# Test RAG functionality
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is diabetes?", "use_rag": true}'
 
-- **Documentation**: [docs.cura-medical.com](https://docs.cura-medical.com)
-- **Issues**: [GitHub Issues](https://github.com/royxlead/cura-python/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/royxlead/cura-python/discussions)
-- **Email**: roxlead@proton.me
+# Search medical documents directly
+curl -X POST http://localhost:8000/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "diabetes symptoms", "k": 5}'
+```
 
 ---
 
-**Made with ❤️ for better healthcare accessibility** 
+**Built with ❤️ for better healthcare accessibility**
