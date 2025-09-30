@@ -57,7 +57,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/cura-python.git
+   git clone https://github.com/royxlead/cura-python.git
    cd cura-python
    ```
 
@@ -243,9 +243,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - **Documentation**: [docs.cura-medical.com](https://docs.cura-medical.com)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/cura-python/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/cura-python/discussions)
-- **Email**: support@cura-medical.com
+- **Issues**: [GitHub Issues](https://github.com/royxlead/cura-python/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/royxlead/cura-python/discussions)
+- **Email**: roxlead@proton.me
 
 ---
 
