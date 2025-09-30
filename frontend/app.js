@@ -261,11 +261,16 @@ class ChatManager {
                         .split('* **')
                         .filter(item => item.trim())
                         .map(item => {
-                            const [title, ...rest] = item.split(':**');
-                            if (rest.length > 0) {
+                            // Fix the colon issue - look for patterns like "Title:** description"
+                            if (item.includes(':**')) {
+                                const [title, ...rest] = item.split(':**');
                                 return `<li><strong>${title}:</strong>${rest.join(':**')}</li>`;
+                            } else if (item.includes('**')) {
+                                // Handle cases where ** appears but isn't properly closed
+                                const cleanItem = item.replace(/\*\*/g, '');
+                                return `<li><strong>${cleanItem}</strong></li>`;
                             }
-                            return `<li>${item.replace(/\*\*/g, '')}</li>`;
+                            return `<li>${item}</li>`;
                         });
                     return `<ul class="ai-response-list">${items.join('')}</ul>`;
                 }
@@ -275,17 +280,25 @@ class ChatManager {
                     const items = paragraph
                         .split('* ')
                         .filter(item => item.trim())
-                        .map(item => `<li>${item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`);
+                        .map(item => {
+                            // First fix malformed bold patterns like **Text:** or **Text:*
+                            let cleanItem = item
+                                .replace(/\*\*(.*?):\*+/g, '<strong>$1:</strong>') // **Text:** or **Text:*
+                                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');  // **Text**
+                            return `<li>${cleanItem}</li>`;
+                        });
                     return `<ul class="ai-response-list">${items.join('')}</ul>`;
                 }
                 
                 // Handle regular paragraphs
                 if (paragraph.trim()) {
-                    // Replace **text** with <strong>text</strong>
-                    const boldFormatted = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    // Replace *text* with <em>text</em>
-                    const italicFormatted = boldFormatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                    return `<p>${italicFormatted}</p>`;
+                    let formatted = paragraph
+                        // Fix malformed patterns first
+                        .replace(/\*\*(.*?):\*+/g, '<strong>$1:</strong>') // **Text:** or **Text:*
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // **Text**
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>');             // *text*
+                    
+                    return `<p>${formatted}</p>`;
                 }
                 
                 return '';
