@@ -1,7 +1,15 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from config import DEVICE, EMBEDDING_MODEL, VECTOR_STORE_PATH
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Configuration
+DEVICE = os.getenv("DEVICE", "cpu")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+VECTOR_STORE_PATH = os.getenv("VECTOR_STORE_PATH", "faiss_index")
 
 def build_vector_store(texts):
     print("Building vector store...")

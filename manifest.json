@@ -1,0 +1,30 @@
+{
+    "name": "Cura Medical AI Assistant",
+    "short_name": "Cura AI",
+    "description": "Your intelligent medical companion for health insights and symptom analysis",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "orientation": "portrait-primary",
+    "categories": ["health", "medical", "lifestyle"],
+    "lang": "en-US",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iMTIiIGZpbGw9IiMyNTYzZWIiLz4KPHA+aCBkPSJNMjQgMTJjLTYuNjMgMC0xMiA1LjM3LTEyIDEyczUuMzcgMTIgMTIgMTIgMTItNS4zNyAxMi0xMi01LjM3LTEyLTEyLTEyem0wIDIyYy01LjUyIDAtMTAtNC40OC0xMC0xMHM0LjQ4LTEwIDEwLTEwIDEwIDQuNDggMTAgMTAtNC40OCAxMC0xMCAxMHoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=",
+            "sizes": "48x48",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDgiIGZpbGw9IiMyNTYzZWIiLz4KPHA+aCBkPSJNOTYgNDhjLTI2LjUyIDAtNDggMjEuNDgtNDkgNDhzMjEuNDggNDggNDggNDggNDgtMjEuNDggNDgtNDgtMjEuNDgtNDgtNDgtNDh6bTAgODhjLTIyLjA5IDAtNDAtMTcuOTEtNDAtNDBzMTcuOTEtNDAgNDAtNDAgNDAgMTcuOTEgNDAgNDAtMTcuOTEgNDAtNDAgNDB6IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI4IiBmaWxsPSIjMjU2M2ViIi8+Cjxwb2x5Z29uIHBvaW50cz0iMjU2IDEyOCAyNTYgMzg0IDM4NCAyNTYgMjU2IDEyOCIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==",
+            "sizes": "512x512",
+            "type": "image/svg+xml"
+        }
+    ]
+}

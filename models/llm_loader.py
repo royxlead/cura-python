@@ -17,29 +17,38 @@
 
 #     return HuggingFacePipeline(pipeline=pipe)
 
-from langchain_together import Together  # ✅ New import from updated package
-from config import TOGETHER_API_KEY, LLM_MODEL
+import google.generativeai as genai
+from langchain_google_genai import ChatGoogleGenerativeAI
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def initialize_llm():
     """
-    Initialize the Together AI LLM using the updated langchain-together integration.
+    Initialize the Google Gemini LLM using the langchain-google-genai integration.
     """
-    if not TOGETHER_API_KEY:
-        raise EnvironmentError("❌ TOGETHER_API_KEY is not set. Check your .env file or environment variables.")
+    gemini_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    gemini_model = os.getenv("GEMINI_MODEL", "gemini-1.5-pro")
+    
+    if not gemini_api_key:
+        raise EnvironmentError("❌ GEMINI_API_KEY or GOOGLE_API_KEY is not set. Check your .env file or environment variables.")
 
-    print(f"🔗 Initializing Together AI LLM: {LLM_MODEL}")
+    print(f"🔗 Initializing Google Gemini LLM: {gemini_model}")
 
-    llm = Together(
-        model=LLM_MODEL,
+    # Configure the Gemini API
+    genai.configure(api_key=gemini_api_key)
+
+    # Initialize the LangChain wrapper for Gemini
+    llm = ChatGoogleGenerativeAI(
+        model=gemini_model,
         temperature=0.7,
-        top_k=50,
+        max_tokens=1000,
+        top_k=40,
         top_p=0.95,
-        max_tokens=800,
-        repetition_penalty=1.1,
-        api_key=TOGETHER_API_KEY,   
+        google_api_key=gemini_api_key,
         verbose=True
     )
 
-    print("✅ LLM initialized successfully.\n")
+    print("✅ Gemini LLM initialized successfully.\n")
     return llm

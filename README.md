@@ -1,172 +1,252 @@
-# CURA 🩺
+# 🏥 Cura Medical AI Assistant
 
-CURA is an **AI-powered medical assistant** designed to streamline healthcare tasks by enabling users to interact with medical data, ask queries, and retrieve information efficiently.  
-It leverages **FAISS indexing**, **Hugging Face models**, and **LangChain pipelines** to provide intelligent, retrieval-augmented responses in a simple web-based interface.
+**Advanced AI-powered medical assistant with professional-grade diagnostic capabilities and comprehensive health monitoring**
 
----
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-3.0+-green.svg)](https://fastapi.tiangolo.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0+-darkgreen.svg)](https://mongodb.com)
+[![AI](https://img.shields.io/badge/AI-Google%20Gemini-orange.svg)](https://ai.google.dev)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📑 Table of Contents
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [UI](#-ui)
-- [Installation](#-installation)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-- [Usage](#-usage)
-- [Directory Structure](#-directory-structure)
-- [Workflow](#-workflow)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Acknowledgments](#-acknowledgments)
+## 🚀 Advanced Medical AI Features
 
----
+### � Professional Medical Intelligence
+- **Differential Diagnosis**: AI-powered diagnostic assistance with confidence scoring
+- **Emergency Detection**: Automatic triage and emergency protocol activation
+- **Medical Document Analysis**: Lab results, imaging reports, and clinical notes processing
+- **Context-Aware Conversations**: Maintains comprehensive medical context across sessions
 
-## 🚀 Features
-- **Conversational AI Chatbot** – Ask medical queries using Hugging Face-powered LLMs.  
-- **PDF Knowledge Extraction** – Upload and analyze medical PDFs for interactive Q&A.  
-- **FAISS Vector Store** – Efficient indexing for fast and relevant information retrieval.  
-- **Retrieval-Augmented Generation (RAG)** – Smarter responses by blending embeddings with generative AI.  
-- **Web Interface** – Lightweight HTML/CSS/JS frontend for seamless interaction.  
-- **FastAPI Backend** – Scalable and modular API for healthcare-related tasks.  
+### 💊 Comprehensive Medication Management
+- **Drug Interaction Analysis**: Advanced interaction checking with severity classification
+- **Medication Guidance**: Dosage, timing, and administration recommendations
+- **Side Effect Monitoring**: Proactive side effect tracking and alerts
+- **Comprehensive Drug Database**: Extensive medication information and clinical data
 
----
+### � Health Monitoring & Analytics
+- **Vital Signs Tracking**: Blood pressure, heart rate, glucose, weight monitoring
+- **Health Trends Analysis**: AI-powered trend detection with personalized insights  
+- **Health Risk Assessment**: Personalized risk scoring and prevention strategies
+- **Smart Alerts**: Intelligent health alerts with severity-based prioritization
 
-## 🏗 Architecture
-CURA follows a modular pipeline:  
+### 🏥 Clinical Decision Support
+- **Evidence-Based Guidelines**: Access to current clinical practice guidelines
+- **Symptom Pattern Recognition**: Advanced symptom analysis with red flag detection
+- **Treatment Planning**: Structured treatment recommendations with follow-up guidance
+- **Medical Knowledge Base**: Comprehensive medical reference system
 
-1. **Frontend** – Simple web UI built with HTML, CSS, JS.  
-2. **Backend** – FastAPI server handling chat, PDF ingestion, and retrieval requests.  
-3. **Data Processing** –  
-   - PDF parsing via `PyPDF2`.  
-   - FAISS vector indexing for document retrieval.  
-4. **AI Models** –  
-   - Hugging Face `transformers` for language generation.  
-   - LangChain-powered RAG pipeline for contextual Q&A.  
+### ⚡ Performance & Optimization
+- **Intelligent Caching**: Multi-layer caching with adaptive TTL for optimal performance
+- **Response Optimization**: Priority-based response optimization for emergency situations
+- **Performance Monitoring**: Real-time system performance tracking and analytics
+- **Efficient Processing**: Batch processing and optimized data handling
 
----
+### 🔐 Healthcare Security & Compliance
+- **HIPAA-Compliant Design**: Healthcare data protection standards
+- **Advanced Authentication**: JWT with refresh tokens and role-based access
+- **Audit Logging**: Comprehensive activity logging for compliance
+- **Data Encryption**: End-to-end encryption for sensitive medical data
 
-## 🖼 UI
-| Chatbot Interface | Chat Output |
-|-------------------|-------------|
-| ![UI Screenshot 1](assets/chat1.png) | ![UI Screenshot 2](assets/chat2.png) |
-
----
-
-## ⚙️ Installation
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python **3.10+**  
-- Node.js *(optional, for frontend dependencies)*  
-- `pip` package manager  
-- Hugging Face models (configured in `config.py`)  
+- Python 3.8 or higher
+- MongoDB (local or cloud)
+- Google Gemini API key
 
-### Setup
-```bash
-# Clone repo
-git clone https://github.com/royxdev/CURA.git
-cd CURA
+### Installation
 
-# Setup virtual environment
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/cura-python.git
+   cd cura-python
+   ```
 
-# Install dependencies
-pip install -r requirements.txt
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   
+   # Windows
+   venv\Scripts\activate
+   
+   # Linux/Mac
+   source venv/bin/activate
+   ```
 
-# Configure models in config.py (LLM_MODEL, EMBEDDING_MODEL)
-````
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Run the server:
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-```bash
-python run_server.py
-```
-
----
-
-## 💻 Usage
-
-1. Place medical PDFs in `data/pdfs/`.
-2. Start the backend server:
-
+5. **Run the application**
    ```bash
    python run_server.py
    ```
-3. Open `frontend/index.html` in a browser.
-4. Interact with the chatbot — ask questions, analyze PDFs, and retrieve insights.
-5. (Optional) Run terminal-based chat:
 
+6. **Access the application**
+   - Open your browser to `http://localhost:8000`
+   - API documentation: `http://localhost:8000/docs`
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# MongoDB Configuration
+MONGODB_URL=mongodb://localhost:27017
+DATABASE_NAME=cura_medical
+
+# AI Configuration
+GOOGLE_API_KEY=your_gemini_api_key_here
+OPENAI_API_KEY=your_openai_key_here  # Optional
+
+# Authentication
+SECRET_KEY=your_secret_key_here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Application
+DEBUG=true
+HOST=0.0.0.0
+PORT=8000
+
+# Theme
+DEFAULT_THEME=light
+```
+
+## 🏗️ Architecture
+
+### Backend Structure
+```
+app/
+├── core/           # Core configuration and database
+├── services/       # Business logic services
+├── api/           # API routes and endpoints
+├── models/        # Database models
+└── schemas/       # Pydantic schemas
+
+chains/            # RAG pipeline
+data/              # Medical documents
+utils/             # Utility functions
+frontend/          # Modern web interface
+```
+
+### Key Components
+
+- **FastAPI**: Modern Python web framework
+- **MongoDB + Beanie**: Document database with ODM
+- **LangChain**: RAG pipeline for AI responses
+- **Google Gemini**: Advanced language model
+- **FAISS**: Vector similarity search
+- **JWT**: Secure authentication
+- **WebSocket**: Real-time communication
+
+## 🔧 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/logout` - User logout
+
+### Chat
+- `POST /api/chat/message` - Send message
+- `GET /api/chat/sessions` - Get chat sessions
+- `DELETE /api/chat/sessions/{id}` - Delete session
+- `WebSocket /api/chat/ws/{user_id}` - Real-time chat
+
+### Medical
+- `POST /api/medical/symptoms/analyze` - Analyze symptoms
+- `GET /api/medical/history` - Get medical history
+- `POST /api/medical/report` - Generate health report
+
+## 🧪 Development
+
+### Running Tests
+```bash
+# Install test dependencies
+pip install pytest pytest-asyncio httpx
+
+# Run tests
+pytest tests/
+```
+
+### Code Formatting
+```bash
+# Install formatting tools
+pip install black isort flake8
+
+# Format code
+black .
+isort .
+flake8 .
+```
+
+### Adding Medical Documents
+1. Place PDF files in the `data/pdfs/` directory
+2. Run the indexing process:
    ```bash
-   python main.py
+   python -m utils.vector_store
    ```
 
----
+## 🌐 Deployment
 
-## 📂 Directory Structure
+### Docker Deployment
+```bash
+# Build image
+docker build -t cura-medical .
 
-```
-CURA/
-├── chains/            # RAG pipeline
-├── chatbot/           # Conversational logic
-├── data/
-│   └── pdfs/          # Medical documents
-├── faiss_index/       # Vector stores
-├── models/            # Model loaders
-├── utils/             # Utilities (PDF, prompts, vector ops)
-├── frontend/          # Web interface (HTML, CSS, JS)
-├── run_server.py      # FastAPI entrypoint
-├── requirements.txt   # Dependencies
-└── config.py          # Model configs
+# Run container
+docker run -p 8000:8000 --env-file .env cura-medical
 ```
 
----
-
-## 🔄 Workflow
-
-1. **Extract PDF text** → `utils/pdf_utils.py`.
-2. **Build FAISS vector store** → `utils/vector_store.py`.
-3. **Load LLM** → `models/llm_loader.py`.
-4. **RAG pipeline setup** → `chains/rag_pipeline.py`.
-5. **Interact** → via web UI or terminal chatbot.
-
----
-
-## 🛠 Roadmap
-
-* ✅ Core features: PDF ingestion, FAISS indexing, chatbot.
-* 🚀 Future:
-
-  * Support for more medical file formats.
-  * Smarter conversational context handling.
-  * Full web deployment (Docker/Cloud hosting).
-
----
+### Production Setup
+1. Use a production WSGI server (Gunicorn)
+2. Set up MongoDB cluster
+3. Configure reverse proxy (Nginx)
+4. Enable HTTPS/SSL
+5. Set up monitoring and logging
 
 ## 🤝 Contributing
 
-Contributions are welcome!
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
 
-1. Fork the repo
-2. Create a new branch:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
 
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit & push changes
-4. Submit a Pull Request 🚀
+## 📄 License
 
----
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📜 License
+## 🚨 Medical Disclaimer
 
-CURA is released under the [MIT License](LICENSE).
-
----
+**Important**: Cura Medical AI Assistant is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
 
 ## 🙏 Acknowledgments
 
-* [Hugging Face](https://huggingface.co/) – for model libraries
-* [LangChain](https://www.langchain.com/) – for RAG pipeline
-* [FAISS](https://faiss.ai/) – for efficient vector indexing
-* Open-source contributors who made this possible ♥
+- [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
+- [LangChain](https://langchain.com/) - AI application framework
+- [Google Gemini](https://ai.google.dev/) - Advanced AI model
+- [Material Design](https://material.io/) - UI design system
+- Medical literature and resources used in training
+
+## 📞 Support
+
+- **Documentation**: [docs.cura-medical.com](https://docs.cura-medical.com)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/cura-python/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/cura-python/discussions)
+- **Email**: support@cura-medical.com
+
+---
+
+**Made with ❤️ for better healthcare accessibility**
